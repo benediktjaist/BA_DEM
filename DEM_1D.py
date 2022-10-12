@@ -23,6 +23,7 @@ class particle:
         self.radius = radius
         self.elstiffnesn = elstiffnesn
         self.mass = mass
+    
         
         
         
