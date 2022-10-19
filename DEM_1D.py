@@ -13,11 +13,11 @@ from boundary_class import boundary
 
 #position, velocity, acceleration, force, radius, elstiffnesn, mass, pred_posi(initialisiert mit 0)):
 p1 = particle(0 , 1,0,0,1,100,5,0)
-p2 = particle(6 , 0,0,0,1,100,5,0)
+p2 = particle(4 , 0,0,0,1,100,5,0)
 
 #initialization
 dt = 1
-simtime = 8 #time of simulation
+simtime = 6 #time of simulation
 
 #timeloop
 for t in range(0,simtime,dt):
@@ -63,6 +63,7 @@ for t in range(0,simtime,dt):
        
    print("pos1:",p1.position, "vel1:",p1.velocity, "acc1:",p1.acceleration)
    print("pos2:",p2.position, "vel2:",p2.velocity, "acc2:",p2.acceleration)
+   print()
 
 
 

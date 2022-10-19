@@ -24,7 +24,9 @@ animationTimer = time.Clock()
 x = 50
 y = 50
 
+#endAnimation = False
 # creating a running loop
+#if endAnimation == True:
 while True:
     
     # creating a loop to check events that are occurring
@@ -36,6 +38,8 @@ while True:
         # checking if keydown event happened or not
         if event.type == pygame.KEYDOWN:
             print("A key has been pressed")
+            pygame.quit()
+            sys.exit()
             
     #update position
     x += 1
@@ -46,6 +50,8 @@ while True:
     #filled rectangle
     draw.rect(screen, (255,0,0), (x,y,100,100) )
     draw.line(screen, (255,0,0), (0,10), (100,50))
+    if x == 60:
+        endAnimation = True
     
     # limit to 30 fps
     animationTimer.tick(30)
