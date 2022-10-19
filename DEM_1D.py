@@ -14,7 +14,7 @@ class system:
         self.number_of_particles = number_of_particles
         #save particle positions
         #save forces
-    def create_particle
+  #  def create_particle
     
 
 class particle:
@@ -28,7 +28,7 @@ class particle:
         
         
 p1 = particle(0,1,10,4)
-p2 = particle(5,6,10,5)
+p2 = particle(1,1,10,5)
 
 print(p1.position)
 print(p2.position)
