@@ -4,121 +4,66 @@ Created on Sun Sep 18 12:30:46 2022
 
 @author: Jaist
 """
-
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 import numpy as np
+from particle_class import particle
+from boundary_class import boundary
 
-class system:
-    def __init__(self, number_of_particles=2): #max number of particles equals 2
-        self.number_of_particles = number_of_particles
-        #save particle positions
-        #save forces
-  #  def create_particle
-    
 
-class particle:
-    def __init__(self, position, radius, elstiffnesn, mass):
-        self.position = position
-        self.radius = radius
-        self.elstiffnesn = elstiffnesn
-        self.mass = mass
-    
+#position, velocity, acceleration, force, radius, elstiffnesn, mass, pred_posi(initialisiert mit 0)):
+p1 = particle(0 , 1,0,0,1,100,5,0)
+p2 = particle(6 , 0,0,0,1,100,5,0)
+
+#initialization
+dt = 1
+simtime = 8 #time of simulation
+
+#timeloop
+for t in range(0,simtime,dt):
+   #loop of particle
+   for n_particle in particle.list_of_particles:  
         
+        #integration of motion with verlocity verlet (predict)
+        pred_vel05 = n_particle.velocity + 0.5*dt*n_particle.acceleration
+       # print(pred_vel05)
+        pred_posi = n_particle.position + dt*pred_vel05
+       # print(pred_posi)
+        n_particle.pred_posi = pred_posi
         
-        
-p1 = particle(0,1,10,4)
-p2 = particle(1,1,10,5)
+   print("pred pos1 for contact search:",p1.pred_posi)
+   print("pred pos2 for contact search:",p2.pred_posi) 
 
-print(p1.position)
-print(p2.position)
+   #contact detection with pred_posi
+   if abs(p1.pred_posi-p2.pred_posi) < p1.radius + p2.radius:
+      print("contact")
+      interpenetration = p1.radius + p2.radius - (p2.pred_posi-p1.pred_posi)
+      print("the interpenetration is:",interpenetration)
+   else:
+      print("no contact")
+      interpenetration = 0
 
+    #contact forces
+   for n_particle in particle.list_of_particles:
+       n_particle.force = interpenetration * n_particle.elstiffnesn
+       
+       #print(n_particle.force, "force was updated")
+       
+   for n_particle in particle.list_of_particles:
+       #integration of motion with verlocity verlet (update)
+       new_vel_05 = n_particle.velocity + 0.5*dt*n_particle.acceleration
+       new_pos = n_particle.position + dt*new_vel_05
+       new_force = n_particle.force
+       new_acc = new_force/n_particle.mass  #n_particle.mass
+       new_vel = new_vel_05 + 0.5*dt*new_acc
+       
+       n_particle.position = new_pos
+       n_particle.velocity = new_vel
+       n_particle.acceleration = new_acc
+       
+   print("pos1:",p1.position, "vel1:",p1.velocity, "acc1:",p1.acceleration)
+   print("pos2:",p2.position, "vel2:",p2.velocity, "acc2:",p2.acceleration)
 
-    
-#contact detection
-if abs(p1.position-p2.position) < p1.radius + p2.radius:
-    print("contact")
-    interpenetration = p1.radius + p2.radius - (p2.position-p1.position)
-    print("the interpenetration is: ",interpenetration)
-else:
-    print("no contact")
-    
-    
-#contact forces
-f_n_e = interpenetration * p1.elstiffnesn
-
-print(f_n_e)
-    
-quit()
-
-
-#parameter
-g=9.81
-
-#initial conditions
-positions=[0] #array benutzen
-velocities=[0]
-acc=[9,81]
-
-
-
-iterations =6
-dt =1
-timeline=[0]
-
-
-for i in range(iterations):   #range(start opt def 0,stop req, increment opt def1)
-  #determine the new positions & velocities
-  
-  new_vel_05 = velocities[i] + 0.5*dt*acc
-  new_pos = positions[i] + dt*new_vel_05
-  new_force = force
-  new_acc = new_force/m
-  new_vel = new_vel_05 + 0.5*dt*new_acc
-  
-  #save the new positions & velocities
-  positions.append(new_pos)
-  velocities.append(new_vel)
-  
-  timeline.append(i)
-
-print(positions)
-print(timeline)
-
-#plot results 
-#fig = plt.figure()
-#plt.xlim([-4, 4])
-#plt.ylim([-1,1])
-#camera = Camera(fig)
-#for i in range(len(positions)):    
- #   plt.plot(timeline[i],positions[i], color="green", linewidth=1.0, linestyle="-")
- #   text = "T = " + str(round(dt*i,2))
- #   plt.text(5, 200, text, ha='left',wrap=False)
- #   camera.snap()
-
-#animation = camera.animate()
-#animation.save('falling_ball_3.gif', writer = 'pillow', fps=1)
-
-
-fig, ax = plt.subplots()
-
-
-line, = ax.plot(timeline, positions)
-
-
-def animate(i):
-    line.set_ydata(positions) # update the data.
-    return line,
-
-
-ani = animation.FuncAnimation(
-    fig, animate, interval=20, blit=True, save_count=50)
-
-
-ani.save('falling_ball_5.gif', writer = 'pillow', fps=20)
-
-
-plt.show()
 
 
 

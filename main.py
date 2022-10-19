@@ -9,35 +9,26 @@ import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 import numpy as np
 from particle_class import particle
+from boundary_class import boundary
 
 #position, velocity, acceleration, force, radius, elstiffnesn, mass):
-p1 = particle(0,0,0,0,1,10,4)
-p2 = particle(5,0,0,0,6,10,5)
+p1 = particle(0,1,0,4,1,10,4)
+p2 = particle(3,0,0,4,1,10,5)
+
+#boundaries --> define a vector with p1 & p2 
+b1 = boundary((0,0), (0,10), 1, 1000)
+b2 = boundary((0,3), (0,5), 2, 4)
 
 #initialization
-dt = 0.5
-simtime = 10 #time of simulation
-nofp=2
-velocity = 1
-acc=1
-force=1
-#list_of_particles=[]
-#list_of_particles.append(p1)
-#list_of_particles.append(p2)
-
-
-print(particle.list_of_particles)
-
-for n_particle in particle.list_of_particles:
-    print(n_particle.position)
+dt = 1
+simtime = 2 #time of simulation
 
 #timeloop
-for t in range(simtime):
+for t in range(0,simtime,dt):
     #loop of particle
-    for p in range (1, nofp):
+   for n_particle in particle.list_of_particles:  # for p in range (1,len(particle.list_of_particles)):
         
-        #integration of motion with verlocity verlet #predict
-        
+        #integration of motion with verlocity verlet (predict)
         
         
         
@@ -52,10 +43,10 @@ for t in range(simtime):
         #contact forces
         for n_particle in particle.list_of_particles:
             n_particle.force = interpenetration * n_particle.elstiffnesn
-        
+            print(n_particle.force)
         
         for n_particle in particle.list_of_particles:
-        #integration of motion with verlocity verlet #update
+        #integration of motion with verlocity verlet (update)
             new_vel_05 = n_particle.velocity + 0.5*dt*n_particle.acceleration
             new_pos = n_particle.position + dt*new_vel_05
             new_force = n_particle.force
