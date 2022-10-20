@@ -26,8 +26,8 @@ animationTimer = time.Clock()
 
 #initialisation of DEM+Animation
 t=0
-dt = 1
-simsteps = 50 #number max steps for simulation
+dt = 0.1
+simsteps = 20 #number max steps for simulation
 # creating a running loop for animation
 
 #while t <= simtime:
@@ -44,7 +44,7 @@ p1 = particle(0 , 10,0,0,100,5,5,0)
 p2 = particle(300 , 0,0,0,100,5,5,0) 
     
 #timeloop for DEM
-for t in range(0,simsteps,dt):
+for t in np.arange(0, simsteps, dt):
     #loop of particle
     for n_particle in particle.list_of_particles:  
             
@@ -66,8 +66,9 @@ for t in range(0,simsteps,dt):
     else:
         print("no contact")
         interpenetration = 0
-    
-   #contact forces
+        
+
+    #contact forces
     for n_particle in particle.list_of_particles:
         n_particle.force = interpenetration * n_particle.elstiffnesn
            
@@ -91,7 +92,7 @@ for t in range(0,simsteps,dt):
     #draw objects
     screen.fill((100,100,200))
        
-    draw.line(screen, (255,0,0), (0,10), (100,50))
+    #draw.line(screen, (255,0,0), (0,10), (100,50))
     #draw particles
     draw.circle(screen, (255,0,0), (p1.position,500), p1.radius)
     draw.circle(screen, (255,0,0), (p2.position,500), p2.radius)
@@ -102,6 +103,10 @@ for t in range(0,simsteps,dt):
     display.update()
 pygame.quit() 
 sys.exit()
+
+''' die kinematik der kontaktkräfte wurde noch nicht ordentlich berücksichtigt
+    deshalb beschleuniggen die particles''' 
+    
       
         
 
