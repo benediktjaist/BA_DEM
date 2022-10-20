@@ -7,7 +7,7 @@ Created on Sun Sep 18 12:30:46 2022
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 import numpy as np
-from particle_class import particle
+from particle_class import particle, system
 from boundary_class import boundary
 
 
@@ -15,14 +15,18 @@ from boundary_class import boundary
 p1 = particle(0 , 1,0,0,1,100,5,0)
 p2 = particle(4 , 0,0,0,1,100,5,0)
 
+list_of_particles = [p1,p2]
+
+#s = sytem(list_of_particles)
+
 #initialization
 dt = 1
 simtime = 6 #time of simulation
 
 #timeloop
-for t in range(0,simtime,dt):
+for t in np.arange(0, simtime, dt):
    #loop of particle
-   for n_particle in particle.list_of_particles:  
+   for n_particle in particle.list_of_particles:  #p1.particles
         
         #integration of motion with verlocity verlet (predict)
         pred_vel05 = n_particle.velocity + 0.5*dt*n_particle.acceleration
