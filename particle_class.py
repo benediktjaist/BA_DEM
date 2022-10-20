@@ -36,3 +36,21 @@ class particle:
 
 #print(p.position)
 
+
+class system:
+    def __init__(self, listOfParticles):
+        self.list_of_particles = listOfParticles
+        '''
+        #timeloop
+        for t in np.arange(0, simtime, dt):
+           #loop of particle
+           for n_particle in particle.list_of_particles:  
+                
+                #integration of motion with verlocity verlet (predict)
+                pred_vel05 = n_particle.velocity + 0.5*dt*n_particle.acceleration
+               # print(pred_vel05)
+                pred_posi = n_particle.position + dt*pred_vel05
+               # print(pred_posi)
+                n_particle.pred_posi = pred_posi
+              #  print(pred_vel05) #testing with arrays
+              '''
