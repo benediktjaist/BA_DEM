@@ -17,17 +17,13 @@ from boundary_class import boundary
 # initialising pygame
 pygame.init()
  
-# creating display
-screen = pygame.display.set_mode((800, 800))
-display.set_caption('this should be an animation')
-
-#animation
-animationTimer = time.Clock()
-
 #initialisation of DEM+Animation
 t=0
 dt = 0.1
 simsteps = 20 #number max steps for simulation
+screen = pygame.display.set_mode((800, 800))
+display.set_caption('this should be an animation')
+animationTimer = time.Clock()
 # creating a running loop for animation
 
 #while t <= simtime:
@@ -39,13 +35,16 @@ simsteps = 20 #number max steps for simulation
             
 # update positions    
 #generating particles
-#position, velocity, acceleration, force, radius, elstiffnesn, mass, pred_posi(initialisiert mit 0)):
-p1 = particle(0 , 10,0,0,100,5,5,0)
-p2 = particle(300 , 0,0,0,100,5,5,0) 
+# position, velocity, acceleration,rotation, force, radius, elstiffnesn, mass, pred_posi(initialisiert mit 0)):
+p1 = particle(200 , 5,0,0,0,100,5,5,0)
+p2 = particle(500 , 0,0,0,0,100,5,5,0) 
     
 #timeloop for DEM
 for t in np.arange(0, simsteps, dt):
+    
     #loop of particle
+    
+    
     for n_particle in particle.list_of_particles:  
             
         #integration of motion with verlocity verlet (predict)
@@ -101,11 +100,18 @@ for t in np.arange(0, simsteps, dt):
     animationTimer.tick(30)
    
     display.update()
+        
+        
 pygame.quit() 
 sys.exit()
 
 ''' die kinematik der kontaktkräfte wurde noch nicht ordentlich berücksichtigt
-    deshalb beschleuniggen die particles''' 
+    deshalb beschleuniggen die particles
+    if event.type == pygame.KEYDOWN:
+        pygame.quit() 
+        sys.exit()
+    
+    ''' 
     
       
         
