@@ -11,7 +11,7 @@ import numpy as np
 class system:
     def __init__(self, number_of_particles=2): #max number of particles equals 2
         self.number_of_particles = number_of_particles
-        #save particle positions
+        #save Particle positions
         #save forces
   #  def create_particle
     

@@ -25,8 +25,8 @@ simtime = 2 #time of simulation
 
 #timeloop
 for t in range(0,simtime,dt):
-    #loop of particle
-   for n_particle in particle.list_of_particles:  # for p in range (1,len(particle.list_of_particles)):
+    #loop of Particle
+   for n_particle in particle.list_of_particles:  # for p in range (1,len(Particle.list_of_particles)):
         
         #integration of motion with verlocity verlet (predict)
         

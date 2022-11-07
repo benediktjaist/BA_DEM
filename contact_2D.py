@@ -21,8 +21,8 @@ class particle_test:
         particle_test.list_of_particles.append(self)
 
 #position[x,y], velocity[dx,dy], acceleration[ddx,ddy], force[fx,fy], radius, elstiffnesn, mass, pred_posi[x,y](initialisiert mit 0)):
-#p1 = particle(np.array([3,0]) , np.array([1,0]),np.array([0,0]),np.array([0,0]),1,100,5,np.array([0,0]))
-#p2 = particle(np.array([4,0]) , np.array([0,0]),np.array([0,0]),np.array([0,0]),1,100,5,np.array([0,0]))
+#p1 = Particle(np.array([3,0]) , np.array([1,0]),np.array([0,0]),np.array([0,0]),1,100,5,np.array([0,0]))
+#p2 = Particle(np.array([4,0]) , np.array([0,0]),np.array([0,0]),np.array([0,0]),1,100,5,np.array([0,0]))
 
 #posiiton, radius, stiffnes, rotation
 p1 =particle_test(np.array([0,1]),np.array([1,0]),np.array([0,0]),1,10,5)    #i
@@ -56,7 +56,7 @@ for combinations in liste:              #combinations sind tupel
         print("no contact")
         interpenetration = 0
 
-    #hilfsvektoren von center of particle zu point of contact
+    #hilfsvektoren von center of Particle zu point of contact
     r_ijc=(combinations[0].radius-(combinations[1].elstiffnesn/(combinations[0].elstiffnesn + combinations[1].elstiffnesn))*interpenetration)*normal_ij 
     r_jic=(combinations[1].radius-(combinations[0].elstiffnesn/(combinations[0].elstiffnesn + combinations[1].elstiffnesn))*interpenetration)*normal_ji
 
@@ -107,7 +107,7 @@ chi = 0.5                           # should be taken from literature
 
 elstiffnesn = 10
 
-damp_coeff = 2 * chi * np.sqrt(m_eq*elstiffnesn)               #elstiffnes from which particle?
+damp_coeff = 2 * chi * np.sqrt(m_eq*elstiffnesn)               #elstiffnes from which Particle?
 
 f_ne = p1.elstiffnesn * interpenetration   #no cohesive kontakt --> equation only for interpenetration > 0
 

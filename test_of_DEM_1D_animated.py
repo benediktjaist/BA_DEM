@@ -36,13 +36,13 @@ animationTimer = time.Clock()
 # update positions    
 #generating particles
 # position, velocity, acceleration,rotation, force, radius, elstiffnesn, mass, pred_posi(initialisiert mit 0)):
-p1 = particle(200 , 5,0,0,0,100,5,5,0)
+p1 = particle(200 , 10,0,0,0,100,5,5,0)
 p2 = particle(500 , 0,0,0,0,100,5,5,0) 
     
 #timeloop for DEM
 for t in np.arange(0, simsteps, dt):
     
-    #loop of particle
+    #loop of Particle
     
     
     for n_particle in particle.list_of_particles:  

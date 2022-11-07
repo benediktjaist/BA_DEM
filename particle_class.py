@@ -33,7 +33,7 @@ class particle:
        
         # self.__class__. 
         
-#p = particle(0, 0, 0, 0, 0, 0, 5)
+#p = Particle(0, 0, 0, 0, 0, 0, 5)
 
 #print(p.position)
 
@@ -44,8 +44,8 @@ class system:
         '''
         #timeloop
         for t in np.arange(0, simtime, dt):
-           #loop of particle
-           for n_particle in particle.list_of_particles:  
+           #loop of Particle
+           for n_particle in Particle.list_of_particles:  
                 
                 #integration of motion with verlocity verlet (predict)
                 pred_vel05 = n_particle.velocity + 0.5*dt*n_particle.acceleration

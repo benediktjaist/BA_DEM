@@ -12,8 +12,8 @@ from boundary_class import boundary
 
 
 #position, velocity, acceleration, force, radius, elstiffnesn, mass, pred_posi(initialisiert mit 0)):
-p1 = particle(0 , 1,0,0,1,100,5,0)
-p2 = particle(4 , 0,0,0,1,100,5,0)
+p1 = particle(0 , 1,0,0,1,100,5,0,0)
+p2 = particle(4 , 0,0,0,1,100,5,0,0)
 
 list_of_particles = [p1,p2]
 
@@ -25,7 +25,7 @@ simtime = 6 #time of simulation
 
 #timeloop
 for t in np.arange(0, simtime, dt):
-   #loop of particle
+   #loop of Particle
    for n_particle in particle.list_of_particles:  #p1.particles
         
         #integration of motion with verlocity verlet (predict)
