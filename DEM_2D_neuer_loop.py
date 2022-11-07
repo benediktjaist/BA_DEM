@@ -17,6 +17,19 @@ import random
 import itertools as it
 ###############################################################################
 
+# -- defs
+def get_rgb(colour):
+    colour_rgb = {"Black": (0,0,0), "White": (255,255,255), "Red": (255,0,0), "Lime": (0,255,0), "Blue": (0,0,255),
+                        "Yellow": (255,255,0), "Cyan": (0,255,255), "Magenta": (255,0,255), "Silver": (192,192,192), "Gray": (128,128,128),
+                  "Maroon": (128,0,0), "Olive": (128,128,0), "Green": (0,128,0), "Purple": (128,0,128), "Teal": (0,128,128), "Navy": (0,0,128)}
+    rgb = colour_rgb[str(colour)]
+    return rgb
+
+
+colour_list = ["Black", "White", "Red", "Lime", "Blue",
+               "Yellow", "Cyan", "Magenta", "Silver", "Gray",
+               "Maroon", "Olive", "Green", "Purple", "Teal", "Navy"]
+ # '''
 # initialising pygame
 pygame.init()
 
@@ -26,6 +39,8 @@ display.set_caption('this should be an animation')
 
 # animation
 animationTimer = time.Clock()
+ # '''
+
 '''
 # labeling and drawing particles
 font = pygame.font.SysFont(None, 100)
@@ -38,8 +53,8 @@ for n_particle in Particle.list_of_particles:
 '''
 
 # position[x,y, z=0], velocity[dx,dy, dz = 0], acceleration[ddx,ddy, ddz = 0], rotation[0,0,w], force[fx,fy, 0], radius, elstiffnesn, mass, pred_posi[x,y](initialisiert mit 0)):
-p1 = particle(np.array([200,200,0]), np.array([10,0,0]), np.array([0,0,0]), np.array([0,0,0]), np.array([0,0,0]),50,10,5,np.array([0,0,0]))
-p2 = particle(np.array([450,200,0]), np.array([0,0,0]), np.array([0,0,0]), np.array([0,0,0]), np.array([0,0,0]),50,10,5,np.array([0,0,0]))
+p1 = particle(np.array([300,200,0]), np.array([2,0,0]), np.array([0,0,0]), np.array([0,0,0]), np.array([0,0,0]),50,1000,500,np.array([300,200,0]))
+p2 = particle(np.array([405,200,0]), np.array([-2,0,0]), np.array([0,0,0]), np.array([0,0,0]), np.array([0,0,0]),50,1000,500,np.array([402,200,0]))
 
 
 #p3 = Particle(np.array([200,600]), np.array([5,0]), np.array([0,0]), np.array([0,0]), np.array([0,0]),50,10,5,np.array([0,0]))
@@ -48,11 +63,11 @@ p2 = particle(np.array([450,200,0]), np.array([0,0,0]), np.array([0,0,0]), np.ar
 
 # initialization
 dt = 0.1
-simsteps = 20 #number max steps for simulation
+simtime = 40 #number max steps for simulation
 
 
 ###############################  timeloop  #################################
-for t in np.arange(0, simsteps, dt):
+for t in np.arange(0, simtime, dt):
     ############################  loop of Particle
 
     for n_particle in particle.list_of_particles:  
@@ -60,7 +75,7 @@ for t in np.arange(0, simsteps, dt):
         pred_vel05 = n_particle.velocity + 0.5*dt*n_particle.acceleration
         pred_posi = n_particle.position + dt*pred_vel05
         # update position
-        n_particle.pred_position = pred_posi
+        n_particle.pred_position = np.around(pred_posi, decimals=4)
 
     # contact detection with pred_posi
     for index, pi in enumerate(particle.list_of_particles):
@@ -100,8 +115,8 @@ for t in np.arange(0, simsteps, dt):
 
 
             # contact forces
-            pi.force = interpenetration * pi.elstiffnesn
-            pj.force = -interpenetration * pj.elstiffnesn
+            pi.force = interpenetration * pi.elstiffnesn * normal_ij
+            pj.force = interpenetration * pj.elstiffnesn * normal_ji
 
 
             '''
@@ -131,33 +146,45 @@ for t in np.arange(0, simsteps, dt):
            
             '''
             new_vel_05 = pi.velocity + 0.5 * dt * pi.acceleration
-            pi.position = pi.position + dt * new_vel_05
-            new_force = pi.force
-            pi.acceleration = new_force / pi.mass
-            pi.velocity = new_vel_05 + 0.5 * dt * pi.acceleration
+            pi.position = np.around(pi.position + dt * new_vel_05, decimals=4)
+            new_force = np.around(pi.force, decimals=4)
+            pi.acceleration = np.around(new_force * (1/pi.mass), decimals=4)
+            pi.velocity = np.around(new_vel_05 + 0.5 * dt * pi.acceleration, decimals=4)
 
             new_vel_05 = pj.velocity + 0.5 * dt * pj.acceleration
-            pj.position = pj.position + dt * new_vel_05
-            new_force = pj.force
-            pj.acceleration = new_force / pj.mass  # n_particle.mass
-            pj.velocity = new_vel_05 + 0.5 * dt * pj.acceleration
+            pj.position = np.around(pj.position + dt * new_vel_05, decimals=4)
+            new_force = np.around(pj.force, decimals=4)
+            pj.acceleration = np.around(new_force / pj.mass , decimals=4) # n_particle.mass
+            pj.velocity = np.around(new_vel_05 + 0.5 * dt * pj.acceleration, decimals=4)
+
+            print(new_vel_05)
+            print(new_force)
+            print(v_ij)
+            print(pi.position, pi.velocity, pi.acceleration, pi.force)
+            print(pj.position, pj.velocity, pj.acceleration, pj.force)
+            print('----')
 
 
-
+    #'''
     #### drawing section
-    screen.fill((100,100,200))
-    for n_particle in particle.list_of_particles:
-        draw.circle(screen, (255,0,0), (n_particle.position[0], n_particle.position[1]), n_particle.radius)
-
-    show_score(600,600)
-
+    same_colour = False      # set False for different colours of the particles
+    if same_colour == True:
+        screen.fill((100,100,200))
+        for n_particle in particle.list_of_particles:
+            draw.circle(screen, (255,0,0), (n_particle.position[0], n_particle.position[1]), n_particle.radius)
+    else:
+        screen.fill((100, 100, 200))
+        for indexc, n_particle in enumerate(particle.list_of_particles):
+            chosen_c = colour_list[indexc]  # choosing the colour
+            chosen_c_rgb = get_rgb(chosen_c)    # turning colour name to rgb
+            draw.circle(screen, chosen_c_rgb, (n_particle.position[0], n_particle.position[1]), n_particle.radius)
 
     # limit to 30 fps
     animationTimer.tick(30)
     
     display.update()
    ### end of drawing section
-   
+   #'''
 ######################################   timeloop  ##########################
 pygame.quit() 
 sys.exit()

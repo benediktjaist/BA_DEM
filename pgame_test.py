@@ -9,3 +9,7 @@ font = pygame.font.SysFont('arial', 70)
 # -- defs --
 def show_score(x,y):
     score = font.render("Score: " + str(score_value), True, (0,0,0))
+
+# --
+
+show_score(600,600)
