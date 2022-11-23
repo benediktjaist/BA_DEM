@@ -53,8 +53,8 @@ for n_particle in Particle.list_of_particles:
 '''
 
 # position[x,y, z=0], velocity[dx,dy, dz = 0], acceleration[ddx,ddy, ddz = 0], rotation[0,0,w], force[fx,fy, 0], radius, elstiffnesn, mass, pred_posi[x,y](initialisiert mit 0)):
-p1 = particle(np.array([300,200,0]), np.array([2,0,0]), np.array([0,0,0]), np.array([0,0,0]), np.array([0,0,0]),50,1000,500,np.array([300,200,0]))
-p2 = particle(np.array([405,200,0]), np.array([-2,0,0]), np.array([0,0,0]), np.array([0,0,0]), np.array([0,0,0]),50,1000,500,np.array([402,200,0]))
+p1 = particle(np.array([300,300,0]), np.array([8,8,0]), np.array([0,0,0]), np.array([0,0,0]), np.array([0,0,0]),50,100,500,np.array([300,300,0]))
+p2 = particle(np.array([400,400,0]), np.array([0,0,0]), np.array([0,0,0]), np.array([0,0,0]), np.array([0,0,0]),50,100,500,np.array([400,400,0]))
 
 
 #p3 = Particle(np.array([200,600]), np.array([5,0]), np.array([0,0]), np.array([0,0]), np.array([0,0]),50,10,5,np.array([0,0]))
@@ -62,8 +62,8 @@ p2 = particle(np.array([405,200,0]), np.array([-2,0,0]), np.array([0,0,0]), np.a
 
 
 # initialization
-dt = 0.1
-simtime = 40 #number max steps for simulation
+dt = 0.01
+simtime = 10 #number max steps for simulation
 
 
 ###############################  timeloop  #################################
@@ -87,9 +87,10 @@ for t in np.arange(0, simtime, dt):
 
             if norm_cij < pi.radius + pj.radius:
                 interpenetration = pi.radius + pj.radius - np.dot((pj.pred_position-pi.pred_position),normal_ij)
-
+                interpenetration_vel = -(pj.velocity - pi.velocity) * normal_ij
             else:
                 interpenetration = 0
+                interpenetration_vel = 0
 
             # hilfsvektoren von center of Particle zu point of contact
             r_ijc = (pi.radius-(pj.elstiffnesn/(pi.elstiffnesn + pj.elstiffnesn))*interpenetration)*normal_ij
@@ -103,11 +104,20 @@ for t in np.arange(0, simtime, dt):
             v_ij = (np.cross(pj.rotation, r_jic) + pj.velocity) - (np.cross(pi.rotation, r_ijc) + pi.velocity)
 
             # decomposition in the local reference frame defined at the contact point
-            v_ij_n = (np.dot(v_ij, normal_ij) * normal_ij)  # äußeres skalarprodukt: skalar * vektor --> fehler mit np.multiply()
+            v_ij_n = (np.dot(v_ij, normal_ij) * normal_ij)
             v_ij_t = v_ij - v_ij_n
 
-            # tangential unit vector
-            t_ij = v_ij/np.linalg.norm(v_ij_t)
+            # tangential unit vector should be tangential_ij
+            if np.linalg.norm(v_ij_t) != 0:
+                t_ij = v_ij_t/np.linalg.norm(v_ij_t)
+            else:
+                t_ij = np.array([1,1,0])
+                t_ij[0] = v_ij_n[1]
+                t_ij[1] = v_ij_n[0]
+                t_ij[2] = 0
+                t_ij = t_ij/np.linalg.norm(t_ij)
+
+            # tangential_ji brauche ich auch noch
 
             # for
             # f_ij = f_ij_n + f_ij_t
@@ -115,8 +125,14 @@ for t in np.arange(0, simtime, dt):
 
 
             # contact forces
-            pi.force = interpenetration * pi.elstiffnesn * normal_ij
-            pj.force = interpenetration * pj.elstiffnesn * normal_ji
+            # forces = 0 if norm(ci,cj)>2r
+            # does not work apparently
+            #if norm_cij < pi.radius + pj.radius:
+            pi.force = -interpenetration * pi.elstiffnesn * normal_ij
+            pj.force = -interpenetration * pj.elstiffnesn * normal_ji
+            #else:
+            #pi.force = 0
+            #pj.force = 0
 
 
             '''
@@ -157,9 +173,9 @@ for t in np.arange(0, simtime, dt):
             pj.acceleration = np.around(new_force / pj.mass , decimals=4) # n_particle.mass
             pj.velocity = np.around(new_vel_05 + 0.5 * dt * pj.acceleration, decimals=4)
 
-            print(new_vel_05)
-            print(new_force)
-            print(v_ij)
+
+            print(interpenetration_vel)
+            print(t_ij)
             print(pi.position, pi.velocity, pi.acceleration, pi.force)
             print(pj.position, pj.velocity, pj.acceleration, pj.force)
             print('----')
@@ -186,6 +202,8 @@ for t in np.arange(0, simtime, dt):
    ### end of drawing section
    #'''
 ######################################   timeloop  ##########################
+print(p1.velocity)
+print(p2.velocity)
 pygame.quit() 
 sys.exit()
 

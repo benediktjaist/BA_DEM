@@ -118,3 +118,9 @@ ani.save('falling_ball_5.gif', writer = 'pillow', fps=20)
 
 
 plt.show()
+
+def perpendicular( a ) :
+    b = np.empty_like(a)
+    b[0] = -a[1]
+    b[1] = a[0]
+    return b
