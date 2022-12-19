@@ -57,12 +57,12 @@ p1 = particle(np.array([300,300,0]), np.array([8,8,0]), np.array([0,0,0]), np.ar
 p2 = particle(np.array([400,400,0]), np.array([0,0,0]), np.array([0,0,0]), np.array([0,0,0]), np.array([0,0,0]),50,100,500,np.array([400,400,0]))
 
 
-#p3 = Particle(np.array([200,600]), np.array([5,0]), np.array([0,0]), np.array([0,0]), np.array([0,0]),50,10,5,np.array([0,0]))
-#p4 = Particle(np.array([600,600]), np.array([-5,0]), np.array([0,0]), np.array([0,0]), np.array([0,0]),50,10,5,np.array([0,0]))
+#p3 = particle(np.array([200,600]), np.array([5,0]), np.array([0,0]), np.array([0,0]), np.array([0,0]),50,10,5,np.array([0,0,0]))
+#p4 = particle(np.array([600,600]), np.array([-5,0]), np.array([0,0]), np.array([0,0]), np.array([0,0]),50,10,5,np.array([0,0]))
 
 
 # initialization
-dt = 0.01
+dt = 0.1
 simtime = 10 #number max steps for simulation
 
 

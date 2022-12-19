@@ -8,7 +8,7 @@ Created on Wed Oct 12 17:40:25 2022
 class particle:
     list_of_particles=[]
     
-    def __init__(self, position, velocity, acceleration, rotation, force, radius, elstiffnesn, mass, pred_position):
+    def __init__(self, position, velocity, acceleration, rotation, force, radius, elstiffnesn, mass, pred_position, interpenetration_vel):
         self.position = position
         self.velocity = velocity
         self.acceleration = acceleration
@@ -18,6 +18,7 @@ class particle:
         self.elstiffnesn = elstiffnesn
         self.mass = mass
         self.pred_position = pred_position
+        self.interpenetration_vel = interpenetration_vel
         
         particle.list_of_particles.append(self)
         

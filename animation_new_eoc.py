@@ -39,35 +39,35 @@ animationTimer = time.Clock()
 
 en = []  # gesamtenergie
 en_damp = []  # energie des dämpfers
-en_dissipated = 0  # historische variable
-en_dissipated_t = []
 en_el = []  # energie der feder
 en_i = []  # ekin
 en_j = []  # ekin
 t_points = []
 interpen_calc = []
 interpen_pred = []
-cont_forces = []
-acc = []
-interpen_acc = []
-interpen_vel = []
+cont_forces =[]
 
 # position[x,y, z=0], velocity[dx,dy, dz = 0], acceleration[ddx,ddy, ddz = 0], rotation[0,0,w], force[fx,fy, 0], radius, elstiffnesn, mass, pred_posi[x,y](initialisiert mit 0)):
 p1 = particle(np.array([300, 300, 0]), np.array([70, 70, 0]), np.array([0, 0, 0]), np.array([0, 0, 0]),
               np.array([0, 0, 0]), 50, 1000, 50, np.array([300, 300, 0]), np.array([0, 0, 0]))
 p2 = particle(np.array([400, 400, 0]), np.array([0, 0, 0]), np.array([0, 0, 0]), np.array([0, 0, 0]),
               np.array([0, 0, 0]), 50, 1000, 500, np.array([400, 400, 0]), np.array([0, 0, 0]))
-# p3 = particle(np.array([200, 200, 0]), np.array([0, 0, 0]), np.array([0, 0, 0]), np.array([0, 0, 0]),
-# np.array([0, 0, 0]), 50, 100, 50000000, np.array([200, 200, 0]))
+#p3 = particle(np.array([200, 200, 0]), np.array([0, 0, 0]), np.array([0, 0, 0]), np.array([0, 0, 0]),
+              #np.array([0, 0, 0]), 50, 100, 50000000, np.array([200, 200, 0]))
 
-# p3 = particle(np.array([200,600]), np.array([5,0]), np.array([0,0]), np.array([0,0]), np.array([0,0]),50,10,5,np.array([0,0]))
-# p4 = particle(np.array([600,600]), np.array([-5,0]), np.array([0,0]), np.array([0,0]), np.array([0,0]),50,10,5,np.array([0,0]))
+#p3 = particle(np.array([200,600]), np.array([5,0]), np.array([0,0]), np.array([0,0]), np.array([0,0]),50,10,5,np.array([0,0]))
+#p4 = particle(np.array([600,600]), np.array([-5,0]), np.array([0,0]), np.array([0,0]), np.array([0,0]),50,10,5,np.array([0,0]))
 
 damp_coeff = 0
 # initialization
-dt = 0.01
+dt = 0.001
 simtime = 2  # number max steps for simulation
-
+# ohne Dämpfung erreiche ich max penetration
+# je stärker die dämpfung, desto weiter dringe ich über max penetration ein
+# check ob critical dampened auch für subcritical dampened beispiele: c=200 m=50 k =1000 vi= 50,50
+# in diesem fall separieren particles auch noch für overdampened mit c=400 obwohl c_crit=320
+# mit c_crit und mj=1000*mi verbleibt ca ein Zehntel der max Energy
+interpenetration_vel = 0
 ###############################  timeloop  #################################
 for t in np.arange(0, simtime, dt):
     ############################  loop of Particle
@@ -86,25 +86,36 @@ for t in np.arange(0, simtime, dt):
             norm_cij = np.sqrt(cij[0] ** 2 + cij[1] ** 2)  # =norm_cji
             normal_ij = (pj.pred_position - pi.pred_position) / norm_cij
             normal_ji = (pi.pred_position - pj.pred_position) / norm_cij
-            elstiffnesn_eq = (pi.elstiffnesn * pj.elstiffnesn) / (
-                        pi.elstiffnesn + pj.elstiffnesn)  # Quellenangabe wäre gut
+            elstiffnesn_eq = (pi.elstiffnesn * pj.elstiffnesn) / (pi.elstiffnesn + pj.elstiffnesn)      # Quelle dafür wäre gut
+            rel_vel = np.linalg.norm(pi.velocity - pj.velocity)
             m_eq = (pi.mass * pj.mass) / (pi.mass + pj.mass)
-            radius_eq = (pi.radius*pj.radius) / (pi.radius+pj.radius)
-            # elstiffnesn_eq = elstiffnesn_eq*radius_eq*np.sqrt(2)
+            omega = np.sqrt((elstiffnesn_eq) / m_eq)  # wie bestimmt man systemsteifigkeit für k(pi) =/= k(pj)
+            psi = damp_coeff / (2 * m_eq)  # = 0 für lin. elastisch und kann später mit coeff of restitution bestimmt werden
+            if psi == 0:
+                test_x = 0
+            else:
+                test_x = np.arctan(omega / psi)
+            interpenetration_max = (rel_vel / omega) * np.exp(-(psi / omega) * test_x)
+            end_of_contact = 1/omega * (np.pi - np.arctan((2*psi*omega)/(omega**2-psi**2)))
+
             # contact detection
+
             if norm_cij < pi.radius + pj.radius:
                 interpenetration = pi.radius + pj.radius - np.dot((pj.pred_position - pi.pred_position), normal_ij)
                 interpenetration_vel = -(pj.velocity - pi.velocity) * normal_ij
-                interpenetration_acc = -(pj.acceleration - pi.acceleration) * normal_ij
+
+                # interpenetration_acc = -(pj.acceleration - pi.acceleration) * normal_ij # das ist nicht wirklich interpenetration_acc
+                # interpenetration_acc = (interpenetration_vel_vorher-interpenetration_vel_nacher)/(2*dt)
+                interpenetration_acc = (np.linalg.norm(interpenetration_vel) - np.linalg.norm(pi.interpenetration_vel))/dt
+                print(interpenetration_acc)
                 v = 1 / (pi.radius + pj.radius) * (pi.velocity - pj.velocity) * (pi.radius - pj.radius)
                 print("contact", "penetra", interpenetration, interpenetration_vel, v)
-                i_acc = np.linalg.norm(interpenetration_acc)
+                #print("time_of_contact: ", time_of_contact, "end: ", end_of_contact)
 
-
-
-                if np.linalg.norm(interpenetration_vel) <= 0.01:    # i_acc<=0 and interpenetration_vel = negativ aber VZ geht durch norm verloren
-                    pi.force = [0, 0, 0]
-                    pj.force = [0, 0, 0]
+                if interpenetration_acc <=10:
+                    pi.force = 0
+                    pj.force = 0
+                    print("_________________________________________________")
                 else:
                     pi.force = - interpenetration * elstiffnesn_eq * normal_ij - interpenetration_vel * damp_coeff * normal_ij
                     pj.force = - pi.force  # - interpenetration * pj.elstiffnesn * normal_ji - interpenetration_vel * damp_coeff * normal_ji
@@ -116,15 +127,6 @@ for t in np.arange(0, simtime, dt):
                 pi.force = [0, 0, 0]
                 pj.force = [0, 0, 0]
 
-            rel_vel = np.linalg.norm(pi.velocity - pj.velocity)
-            omega = np.sqrt((elstiffnesn_eq) / m_eq)  # wie bestimmt man systemsteifigkeit für k(pi) =/= k(pj)
-            psi = damp_coeff / (2 * m_eq)  # = 0 für lin. elastisch und kann später mit coeff of restitution bestimmt werden
-
-            interpenetration_max = (rel_vel / omega) * np.exp(-(psi / omega) * np.arctan(omega / psi))
-            print("max_penetr: ", interpenetration_max)
-            # particle doesn't reach the max. interpenetration
-            i_acc = np.linalg.norm(interpenetration_acc)
-            print("i_acc :", i_acc)
 
             new_vel_05 = pi.velocity + 0.5 * dt * pi.acceleration
             pi.position = np.around(pi.position + dt * new_vel_05, decimals=4)
@@ -138,16 +140,16 @@ for t in np.arange(0, simtime, dt):
             pj.acceleration = np.around(new_force / pj.mass, decimals=4)  # n_particle.mass
             pj.velocity = np.around(new_vel_05 + 0.5 * dt * pj.acceleration, decimals=4)
 
-            energy_i = 0.5 * pi.mass * np.linalg.norm(pi.velocity ** 2)
-            energy_j = 0.5 * pj.mass * np.linalg.norm(pj.velocity ** 2)
-            energy_el = 0.5 * np.sqrt(2)/2 * interpenetration ** 2 * elstiffnesn_eq # damit * np.sqrt(2)/2 und alter elstiffnes_eq klappts
-            energy_damp = 0.5 * damp_coeff * np.linalg.norm(interpenetration_vel) * interpenetration
-            energy = energy_i + energy_j + energy_el + energy_damp
+            energy_i = 0.5*pi.mass*np.linalg.norm(pi.velocity**2)
+            energy_j = 0.5*pi.mass*np.linalg.norm(pj.velocity**2)
+            energy_el = 0.5*interpenetration**2*elstiffnesn_eq
+            energy_damp = 0.5*damp_coeff*np.linalg.norm(interpenetration_vel)*interpenetration
+            energy = energy_i + energy_j # + energy_el + energy_damp
             print(pi.position, pi.velocity, pi.acceleration, pi.force)
             print(pj.position, pj.velocity, pj.acceleration, pj.force)
-            print(energy)
             print('----')
-
+            print("Energy:", energy)
+            print('arctan: ', np.arctan(omega / psi))
             en.append(energy)
             t_points.append(t)
             interpen_pred.append(interpenetration_max)
@@ -157,14 +159,6 @@ for t in np.arange(0, simtime, dt):
             en_el.append(energy_el)
             en_damp.append(energy_damp)
             cont_forces.append(np.linalg.norm(pi.force))
-            acc.append(np.linalg.norm(pi.acceleration))
-            interpen_acc.append(np.linalg.norm(interpenetration_acc))
-            interpen_vel.append(np.linalg.norm(interpenetration_vel))
-            en_dissipated += energy_damp
-            en_dissipated_t.append(en_dissipated)
-
-
-
 
     # '''
     #### drawing section
@@ -179,72 +173,46 @@ for t in np.arange(0, simtime, dt):
             chosen_c = colour_list[indexc]  # choosing the colour
             chosen_c_rgb = get_rgb(chosen_c)  # turning colour name to rgb
             draw.circle(screen, chosen_c_rgb, (n_particle.position[0], n_particle.position[1]), n_particle.radius)
-    #draw.line(screen, get_rgb("Green"), (200, 200), (600, 600), width=5)
+    draw.line(screen, get_rgb("Green"), (200, 200), (600, 600), width=5)
     # limit to 30 fps
     animationTimer.tick(30)
 
     display.update()
 ### end of drawing section
 ######################################   timeloop  ##########################
-sum_ekin = []
-for i in range(len(en_i)):
-    sum_ekin.append(en_i[i]+en_j[i])
 
 interpen_pred_max = max(interpen_pred)
 for ind, val in enumerate(interpen_pred):
     interpen_pred[ind] = interpen_pred_max
-interpen_error = round((max(interpen_calc) - interpen_pred_max) / max(interpen_calc), 2)
+interpen_error = round((max(interpen_calc)-interpen_pred_max)/max(interpen_calc),2)
 fig, (ax1, ax2, ax3) = plt.subplots(3)
-fig.suptitle('physical behaviour with attracting forces')
+fig.suptitle('physical behaviour ')
 
 ax1.plot(t_points, en_el, color='tab:red', label='energy in spring')
 ax1.plot(t_points, en_damp, color='tab:green', label='energy in dashpot')
 ax1.plot(t_points, en_i, color='tab:gray', label='ekin pi')
 ax1.plot(t_points, en_j, color='tab:gray', label='ekin pj')
 ax1.plot(t_points, en, color='tab:pink', label='total energy')
-ax1.plot(t_points, sum_ekin, color='tab:blue', label='total kinetic energy')
-ax1.plot(t_points, en_dissipated_t, color='tab:orange', label='dissipated energy')
-# ax1.plot(t_points, en_damp, color='tab:blue', label='energy damp')
+#ax1.plot(t_points, en_damp, color='tab:blue', label='energy damp')
 ax1.set(xlabel='time', ylabel='energy of the system', title='energy dissipation')
 ax1.grid()
 ax1.legend(loc='upper right', shadow=True, fontsize='medium')
-Penetration = False
-if Penetration == True:
-    ax2.plot(t_points, interpen_calc, color='tab:blue', label='interpen calc')
-    ax2.plot(t_points, interpen_pred, color='tab:orange', label='interpen pred')
-    ax2.set(xlabel='time', ylabel='interpenetration', title='interpenetration')
-    ax2.annotate("error of interpenetration: " + str(interpen_error), xy=(1, 1),  # xycoords='data',
-                xytext=(0.8, 0.95), textcoords='axes fraction',
-                # arrowprops=dict(facecolor='black', shrink=0.05),
-                horizontalalignment='right', verticalalignment='top')
-else:
-    ax2.plot(t_points, cont_forces, color='tab:blue', label='contact forces')
-    ax2.set(xlabel='time', ylabel='interpenetration', title='contact forces')
-
+ax2.plot(t_points, interpen_calc, color='tab:blue', label='interpen calc')
+ax2.plot(t_points, interpen_pred, color='tab:orange', label='interpen pred')
+ax2.set(xlabel='time', ylabel='interpenetration', title='interpenetration')
+ax2.annotate("error of interpenetration: "+str(interpen_error), xy=(1, 1),  #xycoords='data',
+            xytext=(0.8, 0.95), textcoords='axes fraction',
+           # arrowprops=dict(facecolor='black', shrink=0.05),
+            horizontalalignment='right', verticalalignment='top',
+            )
 ax2.grid()
 ax2.legend(loc='best', shadow=True, fontsize='medium')
-
-ax3.grid()
-ax3.plot(t_points, interpen_vel, color='tab:blue', label='interpen vel')
-ax3.plot(t_points, interpen_acc, color='tab:green', label='interpen acc')
-ax3.plot(t_points, acc, color='tab:red', label='particle acceleration')
-ax3.legend(loc='upper right', shadow=True, fontsize='medium')
-ax3.set(xlabel='time', ylabel='force', title='contact')
-# ax4.grid()
-# ax4.plot(t_points, cont_forces, color='tab:blue', label='contact force')
-ymax = max(acc)
-xpos = np.where(acc == ymax)
-xpos = int(xpos[0])
-xmax = t_points[xpos]
-ax3.annotate(
-    'max= '+str(round(ymax, 2)),
-    xy=(xmax, ymax), xycoords='data',
-    xytext=(-50, 30), textcoords='offset points',
-    arrowprops=dict(arrowstyle="->"))
+ax3.plot(t_points, cont_forces, color='tab:blue', label='contact force')
 fig.tight_layout()
 fig.set_figwidth(10)
 fig.set_figheight(10)
-fig.savefig("no_attracting_forces_rigid_dampened_correct.png")
+fig.savefig("interpen_corr_2.png")
 plt.show()
 pygame.quit()
 sys.exit()
+
