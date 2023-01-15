@@ -1,3 +1,5 @@
+import os
+
 import pygame
 from pygame import *
 import sys  # wofür?
@@ -27,6 +29,7 @@ def get_rgb(colour):
 colour_list = ["Black", "White", "Red", "Lime", "Blue",
                "Yellow", "Cyan", "Magenta", "Silver", "Gray",
                "Maroon", "Olive", "Green", "Purple", "Teal", "Navy"]
+
 # initialising pygame
 pygame.init()
 
@@ -63,7 +66,7 @@ p2 = particle(np.array([400, 400, 0]), np.array([0, 0, 0]), np.array([0, 0, 0]),
 # p3 = particle(np.array([200,600]), np.array([5,0]), np.array([0,0]), np.array([0,0]), np.array([0,0]),50,10,5,np.array([0,0]))
 # p4 = particle(np.array([600,600]), np.array([-5,0]), np.array([0,0]), np.array([0,0]), np.array([0,0]),50,10,5,np.array([0,0]))
 
-damp_coeff = 0
+damp_coeff = 100
 # initialization
 dt = 0.01
 simtime = 2  # number max steps for simulation
@@ -140,7 +143,7 @@ for t in np.arange(0, simtime, dt):
 
             energy_i = 0.5 * pi.mass * np.linalg.norm(pi.velocity ** 2)
             energy_j = 0.5 * pj.mass * np.linalg.norm(pj.velocity ** 2)
-            energy_el = 0.5 * np.sqrt(2)/2 * interpenetration ** 2 * elstiffnesn_eq # damit * np.sqrt(2)/2 und alter elstiffnes_eq klappts
+            energy_el = 0.5 * np.sqrt(2)/2 * interpenetration ** 2 * elstiffnesn_eq # mit * np.sqrt(2)/2 und alter elstiffnes_eq klappts
             energy_damp = 0.5 * damp_coeff * np.linalg.norm(interpenetration_vel) * interpenetration
             energy = energy_i + energy_j + energy_el + energy_damp
             print(pi.position, pi.velocity, pi.acceleration, pi.force)
@@ -203,7 +206,7 @@ ax1.plot(t_points, en_i, color='tab:gray', label='ekin pi')
 ax1.plot(t_points, en_j, color='tab:gray', label='ekin pj')
 ax1.plot(t_points, en, color='tab:pink', label='total energy')
 ax1.plot(t_points, sum_ekin, color='tab:blue', label='total kinetic energy')
-ax1.plot(t_points, en_dissipated_t, color='tab:orange', label='dissipated energy')
+#ax1.plot(t_points, en_dissipated_t, color='tab:orange', label='dissipated energy')
 # ax1.plot(t_points, en_damp, color='tab:blue', label='energy damp')
 ax1.set(xlabel='time', ylabel='energy of the system', title='energy dissipation')
 ax1.grid()
@@ -247,4 +250,8 @@ fig.set_figheight(10)
 fig.savefig("no_attracting_forces_rigid_dampened_correct.png")
 plt.show()
 pygame.quit()
-sys.exit()
+
+# script_dir = os.path.dirname(__file__)
+# results_dir = os.path.join(script_dir, 'Results')
+file_name = "new_damping"
+fig.savefig("C:/Users/Jaist/Documents/GitHub/BA_DEM/plots_1301/" + file_name + ".png")
