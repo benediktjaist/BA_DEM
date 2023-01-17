@@ -1,13 +1,16 @@
 # -*- coding: utf-8 -*-
+import numpy as np
+
+
 class Particle:
     all_particles = []
 
-    def __init__(self, position, velocity, acceleration, rotation, force, radius, elstiffnesn, mass, pred_position,
+    def __init__(self, position, velocity, acceleration, rotation_vel, force, radius, elstiffnesn, mass, pred_position,
                  interpenetration_vel):
         self.position = position
         self.velocity = velocity
         self.acceleration = acceleration
-        self.rotation = rotation
+        self.rotation_vel = rotation_vel
         self.force = force
         self.radius = radius
         self.elstiffnesn = elstiffnesn
@@ -16,6 +19,17 @@ class Particle:
         self.interpenetration_vel = interpenetration_vel
 
         Particle.all_particles.append(self)
+
+
+class Boundary:
+    all_boundaries = []
+
+    def __init__(self, point_1, point_2, point_of_contact):
+        self.point_1 = point_1
+        self.point_2 = point_2
+        self.point_of_contact = point_of_contact
+
+        Boundary.all_boundaries.append(self)
 
 
 #  def get_position(self):

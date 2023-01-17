@@ -63,12 +63,25 @@ def compute_normal_ji(pi, pj, norm_cij):
     return normal_ji
 
 
-def update_position(particle, dt):
+def update_position(particle, dt, normal):
+    new_vel_05 = particle.velocity + 0.5 * dt * particle.acceleration
+    particle.position = np.around(particle.position + dt * new_vel_05, decimals=4)
+    new_force = np.around(np.dot(np.dot(particle.force, normal), normal), decimals=4)   # nur die normale Komponente
+    particle.acceleration = np.around(new_force * (1 / particle.mass), decimals=4)
+    particle.velocity = np.around(new_vel_05 + 0.5 * dt * particle.acceleration, decimals=4)
+
+def update_position_single_particle(particle, dt):
     new_vel_05 = particle.velocity + 0.5 * dt * particle.acceleration
     particle.position = np.around(particle.position + dt * new_vel_05, decimals=4)
     new_force = np.around(particle.force, decimals=4)
     particle.acceleration = np.around(new_force * (1 / particle.mass), decimals=4)
     particle.velocity = np.around(new_vel_05 + 0.5 * dt * particle.acceleration, decimals=4)
+
+
+def compute_normal_distance(a, b, p):
+    numerator = np.linalg.norm(np.cross(p-a, b-a))
+    denominator = np.linalg.norm(b-a)
+    return numerator/denominator
 
 
 def calculate_energies(pi,pj, interpenetration, interpenetration_vel, damp_coeff, elstiffnesn_eq):
