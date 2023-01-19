@@ -44,7 +44,8 @@ def predict_position(particle, dt):
     pred_vel05 = particle.velocity + 0.5 * dt * particle.acceleration
     pred_posi = particle.position + dt * pred_vel05
     # update position
-    particle.pred_position = np.around(pred_posi, decimals=4)
+    # particle.pred_position = np.around(pred_posi, decimals=4)
+    particle.pred_position = pred_posi
 
 
 def compute_norm_cij(pi, pj):
@@ -65,18 +66,23 @@ def compute_normal_ji(pi, pj, norm_cij):
 
 def update_position(particle, dt, normal):
     new_vel_05 = particle.velocity + 0.5 * dt * particle.acceleration
-    particle.position = np.around(particle.position + dt * new_vel_05, decimals=4)
-    new_force = np.around(np.dot(np.dot(particle.force, normal), normal), decimals=4)   # nur die normale Komponente
-    particle.acceleration = np.around(new_force * (1 / particle.mass), decimals=4)
-    particle.velocity = np.around(new_vel_05 + 0.5 * dt * particle.acceleration, decimals=4)
+    particle.position = particle.position + dt * new_vel_05
+    new_force = np.dot(np.dot(particle.force, normal), normal) # nur die normale Komponente = new_force das ist falsch
+    particle.acceleration = np.array(new_force) * (1 / particle.mass)
+    particle.velocity = new_vel_05 + 0.5 * dt * particle.acceleration
 
 def update_position_single_particle(particle, dt):
     new_vel_05 = particle.velocity + 0.5 * dt * particle.acceleration
-    particle.position = np.around(particle.position + dt * new_vel_05, decimals=4)
-    new_force = np.around(particle.force, decimals=4)
-    particle.acceleration = np.around(new_force * (1 / particle.mass), decimals=4)
-    particle.velocity = np.around(new_vel_05 + 0.5 * dt * particle.acceleration, decimals=4)
-
+    particle.position = particle.position + dt * new_vel_05
+    # new_force = particle.force
+    particle.acceleration = np.array(particle.force) * (1 / particle.mass)
+    particle.velocity = new_vel_05 + 0.5 * dt * particle.acceleration
+    '''
+    new_vel_05 = particle.velocity + 0.5 * dt * particle.acceleration
+    particle.position = particle.position + dt * new_vel_05
+    particle.acceleration = particle.force/particle.mass
+    particle.velocity = new_vel_05 + 0.5 * dt * particle.acceleration
+    '''
 
 def compute_normal_distance(a, b, p):
     numerator = np.linalg.norm(np.cross(p-a, b-a))
@@ -84,10 +90,10 @@ def compute_normal_distance(a, b, p):
     return numerator/denominator
 
 
-def calculate_energies(pi,pj, interpenetration, interpenetration_vel, damp_coeff, elstiffnesn_eq):
+def calculate_energies(pi, pj, interpenetration, interpenetration_vel, damp_coeff, elstiffnesn_eq):
     energy_i = 0.5 * pi.mass * np.linalg.norm(pi.velocity ** 2)
     energy_j = 0.5 * pj.mass * np.linalg.norm(pj.velocity ** 2)
-    energy_el = 0.5 * np.sqrt(2) / 2 * interpenetration ** 2 * elstiffnesn_eq  # mit * np.sqrt(2)/2 und alter elstiffnes_eq klappts
+    energy_el = 0.5  * interpenetration ** 2 * elstiffnesn_eq  # mit * np.sqrt(2)/2 und alter elstiffnes_eq klappts
     energy_damp = 0.5 * damp_coeff * np.linalg.norm(interpenetration_vel) * interpenetration
     energy = energy_i + energy_j + energy_el + energy_damp
     return energy, energy_el, energy_i, energy_j, energy_damp

@@ -56,17 +56,17 @@ interpen_acc = []
 interpen_vel = []
 
 # position[x,y, z=0], velocity[dx,dy, dz = 0], acceleration[ddx,ddy, ddz = 0], rotation[0,0,w], force[fx,fy, 0], radius, elstiffnesn, mass, pred_posi[x,y](initialisiert mit 0)):
-p1 = particle(np.array([300, 300, 0]), np.array([70, 70, 0]), np.array([0, 0, 0]), np.array([0, 0, 0]),
-              np.array([0, 0, 0]), 50, 1000, 50, np.array([300, 300, 0]), np.array([0, 0, 0]))
-p2 = particle(np.array([400, 400, 0]), np.array([0, 0, 0]), np.array([0, 0, 0]), np.array([0, 0, 0]),
-              np.array([0, 0, 0]), 50, 1000, 500, np.array([400, 400, 0]), np.array([0, 0, 0]))
+zentral_1 = particle(np.array([450, 400, 0]), np.array([100, 0, 0]), np.array([0, 0, 0]), np.array([0, 0, 0]),
+              np.array([0, 0, 0]), 50, 10000, 50, np.array([300, 300, 0]), np.array([0, 0, 0]))
+zentral_2 = particle(np.array([600, 400, 0]), np.array([0, 0, 0]), np.array([0, 0, 0]), np.array([0, 0, 0]),
+              np.array([0, 0, 0]), 50, 10000, 50, np.array([300, 300, 0]), np.array([0, 0, 0]))
 # p3 = particle(np.array([200, 200, 0]), np.array([0, 0, 0]), np.array([0, 0, 0]), np.array([0, 0, 0]),
 # np.array([0, 0, 0]), 50, 100, 50000000, np.array([200, 200, 0]))
 
 # p3 = particle(np.array([200,600]), np.array([5,0]), np.array([0,0]), np.array([0,0]), np.array([0,0]),50,10,5,np.array([0,0]))
 # p4 = particle(np.array([600,600]), np.array([-5,0]), np.array([0,0]), np.array([0,0]), np.array([0,0]),50,10,5,np.array([0,0]))
 
-damp_coeff = 100
+damp_coeff = 5
 # initialization
 dt = 0.01
 simtime = 2  # number max steps for simulation
@@ -255,3 +255,6 @@ pygame.quit()
 # results_dir = os.path.join(script_dir, 'Results')
 file_name = "new_damping"
 fig.savefig("C:/Users/Jaist/Documents/GitHub/BA_DEM/plots_1301/" + file_name + ".png")
+
+print("Gesamtenergie vor Stoß: ", en[0])
+print("Gesamtenergie nach Stoß: ", en[-1])

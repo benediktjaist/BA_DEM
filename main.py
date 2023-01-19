@@ -3,6 +3,8 @@
 import pygame as pg
 import matplotlib.pyplot as plt
 import numpy as np
+from matplotlib.offsetbox import AnchoredText
+
 from classes import Particle
 from classes import Boundary
 import functions as fn
@@ -11,26 +13,53 @@ import os
 
 # -- initialising pygame
 pg.init()
-screen = pg.display.set_mode((800, 800))   # creating display
+screen = pg.display.set_mode((1000, 800))   # creating display
 pg.display.set_caption('simulation of two particles')
 animationTimer = pg.time.Clock()
 
 # -- simulation --
 # position[x,y, z=0], velocity[dx,dy, dz = 0], acceleration[ddx,ddy, ddz = 0], rotation_vel[0,0,0], force[fx,fy, 0], radius, elstiffnesn, mass, pred_posi[x,y](initialisiert mit 0)):
-p1 = Particle(np.array([200, 100, 0]), np.array([100, 100, 0]), np.array([0, 0, 0]), np.array([0, 0, 0]),
+#p1 = Particle(np.array([500, 500, 0]), np.array([100, 100, 0]), np.array([0, 0, 0]), np.array([0, 0, 0]),
+              #np.array([0, 0, 0]), 50, 2000, 50, np.array([300, 300, 0]), np.array([0, 0, 0]))
+#p4 = Particle(np.array([600, 650, 0]), np.array([0, 0, 0]), np.array([0, 0, 0]), np.array([0, 0, 0]),
+              #np.array([0, 0, 0]), 50, 2000, 50, np.array([300, 300, 0]), np.array([0, 0, 0]))
+zentral_1 = Particle(np.array([450, 430, 0]), np.array([100, 0, 0]), np.array([0, 0, 0]), np.array([0, 0, 0]),
               np.array([0, 0, 0]), 50, 2000, 50, np.array([300, 300, 0]), np.array([0, 0, 0]))
-p2 = Particle(np.array([500, 500, 0]), np.array([0, 0, 0]), np.array([0, 0, 0]), np.array([0, 0, 0]),
-              np.array([0, 0, 0]), 200, 10000, 100000, np.array([400, 400, 0]), np.array([0, 0, 0]))
+zentral_2 = Particle(np.array([600, 400, 0]), np.array([0, 0, 0]), np.array([0, 0, 0]), np.array([0, 0, 0]),
+              np.array([0, 0, 0]), 50, 2000, 50, np.array([300, 300, 0]), np.array([0, 0, 0]))
+#p2 = Particle(np.array([650, 500, 0]), np.array([0, 0, 0]), np.array([0, 0, 0]), np.array([0, 0, 0]),
+              #np.array([0, 0, 0]), 100, 10000, 100000, np.array([400, 400, 0]), np.array([0, 0, 0]))
+#p3 = Particle(np.array([350, 500, 0]), np.array([0, 0, 0]), np.array([0, 0, 0]), np.array([0, 0, 0]),
+              #np.array([0, 0, 0]), 100, 10000, 100000, np.array([400, 400, 0]), np.array([0, 0, 0]))
 # b1 = Boundary(np.array([50, 700, 0]), np.array([700, 700, 0]), np.array([0,0]))
 # -- simulation parameters
-coeff_of_restitution = 0.6
+coeff_of_restitution = 1
+print(type(zentral_2.force))
 damp_coeff = fn.calculate_damp_coeff(coeff_of_restitution)
 mu = 0.3 # Reibkoeffizient
 k_t = 1000
-
+crit_steps = []
+for particle in Particle.all_particles:
+    crit_steps.append(0.3 * 2 * np.sqrt(particle.mass/particle.elstiffnesn))
+crit_dt = min(crit_steps)
+print("required time step < ", crit_dt)
 print("Dämpfung: ", damp_coeff)
 dt = 0.01
-simtime = 4  # number max steps for simulation
+simtime = 2  # number max steps for simulation
+if dt > crit_dt:
+    print()
+    print("IMPORTANT WARNING\ndt < crit_dt is not satisfied\nchange dt to: ", np.round(crit_dt, 4))
+    exit()
+
+# -- plotting
+en = []  # gesamtenergie
+en_damp = []  # energie des dämpfers
+en_dissipated = 0  # historische variable
+en_dissipated_t = []
+en_el = []  # energie der feder
+en_i = []  # ekin
+en_j = []  # ekin
+t_points = []
 
 for t in np.arange(0, simtime, dt):
 
@@ -85,20 +114,20 @@ for t in np.arange(0, simtime, dt):
                     t_ij = t_ij / np.linalg.norm(t_ij)
 
 
-                print(t_ij)
+                #print(t_ij)
 
                 # -- compute increment of tangential displacement (for updating F_t)
                 # translation of point of contact
                 u_ij = (np.cross(pj.rotation_vel, r_jic) + pj.velocity) - (
                         np.cross(pi.rotation_vel, r_ijc) + pi.velocity)
-                print("uij: ", u_ij)
+                #print("uij: ", u_ij)
 
                 # increment of tangential displacement
                 increment_of_t_displacement = np.linalg.norm(u_ij * t_ij)
 
                 # -- forces
-                f_t = min(mu*np.dot(pi.force, normal_ij), k_t * increment_of_t_displacement)
-                pi.force = interpenetration * elstiffnesn_eq * normal_ji + interpenetration_vel * damp_coeff * normal_ji  #+ k_t * f_t# nicht normal_ij!!
+                f_t = min(mu*np.dot(pi.force, normal_ij), np.dot(pi.force, t_ij) + k_t * increment_of_t_displacement)
+                pi.force = np.array(-interpenetration * elstiffnesn_eq * normal_ij - interpenetration_vel * damp_coeff * normal_ij - f_t * t_ij)  # nicht normal_ij!! # k_t * f_t oder mu* np.array(pi.force) geht nicht
                 pj.force = - pi.force
 
             else:
@@ -128,11 +157,20 @@ for t in np.arange(0, simtime, dt):
             fn.update_position(pj, dt, normal_ji)
             #fn.update_position_single_particle(pi, dt)
             #fn.update_position_single_particle(pj, dt)
-            fn.calculate_energies(pi, pj, interpenetration, interpenetration_vel, damp_coeff, elstiffnesn_eq)
-            print(pi.position, pi.velocity, pi.acceleration, pi.force)
-            print(pj.position, pj.velocity, pj.acceleration, pj.force)
+            energy, energy_el, energy_i, energy_j, energy_damp = fn.calculate_energies(pi, pj, interpenetration, interpenetration_vel, damp_coeff, elstiffnesn_eq)
+            #print(pi.position, pi.velocity, pi.acceleration, pi.force)
+            #print(pj.position, pj.velocity, pj.acceleration, pj.force)
+            #print('--------------------------')
 
-            print('--------------------------')
+            en.append(energy)
+            t_points.append(t)
+
+            en_i.append(energy_i)
+            en_j.append(energy_j)
+            en_el.append(energy_el)
+            en_damp.append(energy_damp)
+            en_dissipated += energy_damp
+            en_dissipated_t.append(en_dissipated)
 
 
 
@@ -178,4 +216,35 @@ for t in np.arange(0, simtime, dt):
 
     pg.display.update()
 pg.quit()
+
+
+sum_ekin = []
+for i in range(len(en_i)):
+    sum_ekin.append(en_i[i]+en_j[i])
+
+
+plt.title('physical behaviour')
+
+fig, ax = plt.subplots()
+ax.plot(t_points, en, color='tab:pink', label='total energy')
+ax.plot(t_points, en_i, color='tab:blue', label='ekin_i')
+ax.plot(t_points, en_j, color='tab:blue', label='ekin_j')
+ax.plot(t_points, en_el, color='tab:red', label='e_spring')
+ax.legend()
+
+at1 = AnchoredText(
+    "en_bf: "+str(round(en[0])), prop=dict(size=10), frameon=True, loc='upper left')
+at1.patch.set_boxstyle("round,pad=0.,rounding_size=0.2")
+ax.add_artist(at1)
+at2 = AnchoredText(
+    "en_af: "+str(round(en[-1])), prop=dict(size=10), frameon=True, loc='upper right')
+at2.patch.set_boxstyle("round,pad=0.,rounding_size=0.2")
+ax.add_artist(at2)
+
+
+file_name = "oblique, elastic, tangential force limited"
+plt.savefig("C:/Users/Jaist/Documents/GitHub/BA_DEM/plots_1701/" + file_name + ".png")
+
+print("Gesamtenergie vor Stoß: ", en[0])
+print("Gesamtenergie nach Stoß: ", en[-1])
 
