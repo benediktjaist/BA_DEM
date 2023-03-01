@@ -5,9 +5,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.offsetbox import AnchoredText
 
-from classes import Particle
-from classes import Boundary
-import functions as fn
+from classes_old import Particle
+from classes_old import Boundary
+import functions_last_week as fn
 import os
 
 
@@ -23,25 +23,18 @@ animationTimer = pg.time.Clock()
               #np.array([0, 0, 0]), 50, 2000, 50, np.array([300, 300, 0]), np.array([0, 0, 0]))
 #p4 = Particle(np.array([600, 650, 0]), np.array([0, 0, 0]), np.array([0, 0, 0]), np.array([0, 0, 0]),
               #np.array([0, 0, 0]), 50, 2000, 50, np.array([300, 300, 0]), np.array([0, 0, 0]))
-#zentral_1 = Particle(np.array([450, 400, 0]), np.array([100, 0, 0]), np.array([0, 0, 0]), np.array([0, 0, 0]),
-              #np.array([0, 0, 0]), 50, 2000, 50, np.array([300, 300, 0]), np.array([0, 0, 0]))
-#zentral_2 = Particle(np.array([600, 400, 0]), np.array([0, 0, 0]), np.array([0, 0, 0]), np.array([0, 0, 0]),
-              #np.array([0, 0, 0]), 50, 2000, 50, np.array([300, 300, 0]), np.array([0, 0, 0]))
+zentral_1 = Particle(np.array([500, 500, 0]), np.array([50, 50, 0]), np.array([0, 0, 0]), np.array([0, 0, 0]),
+              np.array([0, 0, 0]), 50, 2000, 50, np.array([300, 300, 0]), np.array([0, 0, 0]))
+zentral_2 = Particle(np.array([600, 600, 0]), np.array([0, 0, 0]), np.array([0, 0, 0]), np.array([0, 0, 0]),
+              np.array([0, 0, 0]), 50, 2000, 50, np.array([300, 300, 0]), np.array([0, 0, 0]))
 #p2 = Particle(np.array([650, 500, 0]), np.array([0, 0, 0]), np.array([0, 0, 0]), np.array([0, 0, 0]),
               #np.array([0, 0, 0]), 100, 10000, 100000, np.array([400, 400, 0]), np.array([0, 0, 0]))
 #p3 = Particle(np.array([350, 500, 0]), np.array([0, 0, 0]), np.array([0, 0, 0]), np.array([0, 0, 0]),
               #np.array([0, 0, 0]), 100, 10000, 100000, np.array([400, 400, 0]), np.array([0, 0, 0]))
 # b1 = Boundary(np.array([50, 700, 0]), np.array([700, 700, 0]), np.array([0,0]))
-rotation_1 = Particle(position=np.array([500, 500, 0]), velocity=np.array([50, 50, 0]),
-                      acceleration=np.array([0, 0, 0]), force=np.array([0, 0, 0]), rotation=np.array([0, 0, 0]), rotation_vel=np.array([0, 0, 0]),
-                      rotation_acc=np.array([0, 0, 0]), torque=np.array([0, 0, 0]), radius=50, elstiffnesn=2000,
-                      mass=50, pred_position=np.array([300, 300, 0]), interpenetration_vel=np.array([0, 0, 0]))
-rotation_2 = Particle(position=np.array([600, 600, 0]), velocity=np.array([0, 0, 0]),
-                      acceleration=np.array([0, 0, 0]), force=np.array([0, 0, 0]), rotation=np.array([0, 0, 0]), rotation_vel=np.array([0, 0, 0]),
-                      rotation_acc=np.array([0, 0, 0]), torque=np.array([0, 0, 0]), radius=50, elstiffnesn=2000,
-                      mass=50, pred_position=np.array([300, 300, 0]), interpenetration_vel=np.array([0, 0, 0]))
 # -- simulation parameters
 coeff_of_restitution = 1
+print(type(zentral_2.force))
 damp_coeff = fn.calculate_damp_coeff(coeff_of_restitution)
 mu = 0.3 # Reibkoeffizient
 k_t = 1000
@@ -127,7 +120,6 @@ for t in np.arange(0, simtime, dt):
                 # translation of point of contact
                 u_ij = (np.cross(pj.rotation_vel, r_jic) + pj.velocity) - (
                         np.cross(pi.rotation_vel, r_ijc) + pi.velocity)
-                # u_ij = 0
                 #print("uij: ", u_ij)
 
                 # increment of tangential displacement
@@ -250,9 +242,8 @@ at2.patch.set_boxstyle("round,pad=0.,rounding_size=0.2")
 ax.add_artist(at2)
 
 
-file_name = "alter stand lokal"
-plt.savefig("C:/Users/Jaist/Documents/GitHub/BA_DEM/plots_2501/" + file_name + ".png")
+file_name = "code von github"
+plt.savefig("C:/Users/Jaist/Documents/GitHub/BA_DEM/plots_1701/" + file_name + ".png")
 
 print("Gesamtenergie vor Stoß: ", en[0])
 print("Gesamtenergie nach Stoß: ", en[-1])
-

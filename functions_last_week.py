@@ -91,9 +91,9 @@ def compute_normal_distance(a, b, p):
 
 
 def calculate_energies(pi, pj, interpenetration, interpenetration_vel, damp_coeff, elstiffnesn_eq):
-    energy_i = 0.5 * pi.mass * np.linalg.norm(pi.velocity) **2 # zuvor np.linalg.norm(pi.velocity**2)
-    energy_j = 0.5 * pj.mass * np.linalg.norm(pj.velocity) **2
-    energy_el = 0.5 * interpenetration ** 2 * elstiffnesn_eq  # mit * np.sqrt(2)/2 und alter elstiffnes_eq klappts
+    energy_i = 0.5 * pi.mass * np.linalg.norm(pi.velocity ** 2)
+    energy_j = 0.5 * pj.mass * np.linalg.norm(pj.velocity ** 2)
+    energy_el = 0.5  * interpenetration ** 2 * elstiffnesn_eq  # mit * np.sqrt(2)/2 und alter elstiffnes_eq klappts
     energy_damp = 0.5 * damp_coeff * np.linalg.norm(interpenetration_vel) * interpenetration
     energy = energy_i + energy_j + energy_el + energy_damp
     return energy, energy_el, energy_i, energy_j, energy_damp
@@ -132,18 +132,14 @@ def plot_paras():
 # hilfsvektoren von center of Particle zu point of contact
 r_ijc = (pi.radius - (pj.elstiffnesn / (pi.elstiffnesn + pj.elstiffnesn)) * interpenetration) * normal_ij
 r_jic = (pj.radius - (pi.elstiffnesn / (pi.elstiffnesn + pj.elstiffnesn)) * interpenetration) * normal_ji
-
 # position of the contact point
 p_ijc = pi.pred_position + r_ijc  # ortsvektor/point of contact from p1
 p_jic = pj.pred_position + r_jic  # point of contact from p2 ==p_ijc
-
 # velocity at the contact point
 v_ij = (np.cross(pj.rotation, r_jic) + pj.velocity) - (np.cross(pi.rotation, r_ijc) + pi.velocity)
-
 # decomposition in the local reference frame defined at the contact point
 v_ij_n = (np.dot(v_ij, normal_ij) * normal_ij)
 v_ij_t = v_ij - v_ij_n
-
 # tangential unit vector should be tangential_ij
 if np.linalg.norm(v_ij_t) != 0:
     t_ij = v_ij_t / np.linalg.norm(v_ij_t)

@@ -18,30 +18,29 @@ pg.display.set_caption('simulation of two particles')
 animationTimer = pg.time.Clock()
 
 # -- simulation --
-# position[x,y, z=0], velocity[dx,dy, dz = 0], acceleration[ddx,ddy, ddz = 0], rotation_vel[0,0,0], force[fx,fy, 0], radius, elstiffnesn, mass, pred_posi[x,y](initialisiert mit 0)):
-#p1 = Particle(np.array([500, 500, 0]), np.array([100, 100, 0]), np.array([0, 0, 0]), np.array([0, 0, 0]),
-              #np.array([0, 0, 0]), 50, 2000, 50, np.array([300, 300, 0]), np.array([0, 0, 0]))
-#p4 = Particle(np.array([600, 650, 0]), np.array([0, 0, 0]), np.array([0, 0, 0]), np.array([0, 0, 0]),
-              #np.array([0, 0, 0]), 50, 2000, 50, np.array([300, 300, 0]), np.array([0, 0, 0]))
-#zentral_1 = Particle(np.array([450, 400, 0]), np.array([100, 0, 0]), np.array([0, 0, 0]), np.array([0, 0, 0]),
-              #np.array([0, 0, 0]), 50, 2000, 50, np.array([300, 300, 0]), np.array([0, 0, 0]))
-#zentral_2 = Particle(np.array([600, 400, 0]), np.array([0, 0, 0]), np.array([0, 0, 0]), np.array([0, 0, 0]),
-              #np.array([0, 0, 0]), 50, 2000, 50, np.array([300, 300, 0]), np.array([0, 0, 0]))
-#p2 = Particle(np.array([650, 500, 0]), np.array([0, 0, 0]), np.array([0, 0, 0]), np.array([0, 0, 0]),
-              #np.array([0, 0, 0]), 100, 10000, 100000, np.array([400, 400, 0]), np.array([0, 0, 0]))
-#p3 = Particle(np.array([350, 500, 0]), np.array([0, 0, 0]), np.array([0, 0, 0]), np.array([0, 0, 0]),
-              #np.array([0, 0, 0]), 100, 10000, 100000, np.array([400, 400, 0]), np.array([0, 0, 0]))
+# Particle(position, velocity, acceleration, force, rotation_vel, rotation_acc, torque, radius, elstiffnesn,
+#                  mass, pred_position, interpenetration_vel):
+# pred_position [x,y] (initialisiert mit 0)):
+#parallel_1 = Particle(position=np.array([450, 500, 0]), velocity=np.array([100, 0, 0]),
+                     # acceleration=np.array([0, 0, 0]), force=np.array([0, 0, 0]), rotation=np.array([0, 0, 0]), rotation_vel=np.array([0, 0, 0]),
+                      #rotation_acc=np.array([0, 0, 0]), torque=np.array([0, 0, 0]), radius=50, elstiffnesn=2000,
+                     # mass=50, pred_position=np.array([300, 300, 0]), interpenetration_vel=np.array([0, 0, 0]))
+#parallel_2 = Particle(position=np.array([600, 500, 0]), velocity=np.array([0, 0, 0]),
+                      #acceleration=np.array([0, 0, 0]), force=np.array([0, 0, 0]), rotation=np.array([0, 0, 0]), rotation_vel=np.array([0, 0, 0]),
+                      #rotation_acc=np.array([0, 0, 0]), torque=np.array([0, 0, 0]), radius=50, elstiffnesn=2000,
+                      #mass=50, pred_position=np.array([300, 300, 0]), interpenetration_vel=np.array([0, 0, 0]))
+schief_1 = Particle(position=np.array([500, 500, 0]), velocity=np.array([5, 5, 0]),
+                      acceleration=np.array([0, 0, 0]), force=np.array([0, 0, 0]), rotation=np.array([0, 0, 0]), rotation_vel=np.array([0, 0, 0]),
+                      rotation_acc=np.array([0, 0, 0]), torque=np.array([0, 0, 0]), radius=50, elstiffnesn=2000,
+                      mass=50, pred_position=np.array([300, 300, 0]), interpenetration_vel=np.array([0, 0, 0]))
+schief_2 = Particle(position=np.array([580, 580, 0]), velocity=np.array([0, 0, 0]),
+                      acceleration=np.array([0, 0, 0]), force=np.array([0, 0, 0]), rotation=np.array([0, 0, 0]), rotation_vel=np.array([0, 0, 0]),
+                      rotation_acc=np.array([0, 0, 0]), torque=np.array([0, 0, 0]), radius=50, elstiffnesn=2000,
+                      mass=50, pred_position=np.array([300, 300, 0]), interpenetration_vel=np.array([0, 0, 0]))
 # b1 = Boundary(np.array([50, 700, 0]), np.array([700, 700, 0]), np.array([0,0]))
-rotation_1 = Particle(position=np.array([500, 500, 0]), velocity=np.array([50, 50, 0]),
-                      acceleration=np.array([0, 0, 0]), force=np.array([0, 0, 0]), rotation=np.array([0, 0, 0]), rotation_vel=np.array([0, 0, 0]),
-                      rotation_acc=np.array([0, 0, 0]), torque=np.array([0, 0, 0]), radius=50, elstiffnesn=2000,
-                      mass=50, pred_position=np.array([300, 300, 0]), interpenetration_vel=np.array([0, 0, 0]))
-rotation_2 = Particle(position=np.array([600, 600, 0]), velocity=np.array([0, 0, 0]),
-                      acceleration=np.array([0, 0, 0]), force=np.array([0, 0, 0]), rotation=np.array([0, 0, 0]), rotation_vel=np.array([0, 0, 0]),
-                      rotation_acc=np.array([0, 0, 0]), torque=np.array([0, 0, 0]), radius=50, elstiffnesn=2000,
-                      mass=50, pred_position=np.array([300, 300, 0]), interpenetration_vel=np.array([0, 0, 0]))
 # -- simulation parameters
 coeff_of_restitution = 1
+# print(type(zentral_2.force))
 damp_coeff = fn.calculate_damp_coeff(coeff_of_restitution)
 mu = 0.3 # Reibkoeffizient
 k_t = 1000
@@ -52,7 +51,7 @@ crit_dt = min(crit_steps)
 print("required time step < ", crit_dt)
 print("Dämpfung: ", damp_coeff)
 dt = 0.01
-simtime = 2  # number max steps for simulation
+simtime = 5  # number max steps for simulation
 if dt > crit_dt:
     print()
     print("IMPORTANT WARNING\ndt < crit_dt is not satisfied\nchange dt to: ", np.round(crit_dt, 4))
@@ -66,33 +65,40 @@ en_dissipated_t = []
 en_el = []  # energie der feder
 en_i = []  # ekin
 en_j = []  # ekin
+en_rot_i = []  # erot
+en_rot_j = [] # erot
 t_points = []
 
 for t in np.arange(0, simtime, dt):
 
-    for n_particle in Particle.all_particles:
-        fn.predict_position(n_particle, dt)
+    # for n_particle in Particle.all_particles:
+        # fn.predict_position(n_particle, dt)
 
     for index, pi in enumerate(Particle.all_particles):
         if len(Particle.all_particles) == 1:
             fn.update_position_single_particle(pi, dt)
         for pj in Particle.all_particles[index + 1:]:
-            norm_cij = fn.compute_norm_cij(pi, pj)
-            normal_ij = fn.compute_normal_ij(pi, pj, norm_cij)
-            normal_ji = fn.compute_normal_ji(pi, pj, norm_cij)
+
+            cij = pi.position - pj.position
+            norm_cij = np.sqrt(cij[0] ** 2 + cij[1] ** 2)  # =norm_cji
+
+            normal_ij = (pj.position - pi.position) / norm_cij
+
+            normal_ji = (pi.position - pj.position) / norm_cij
 
             # Quellenangabe wäre gut
             elstiffnesn_eq = (pi.elstiffnesn * pj.elstiffnesn) / (pi.elstiffnesn + pj.elstiffnesn)
             m_eq = (pi.mass * pj.mass) / (pi.mass + pj.mass)
             radius_eq = (pi.radius*pj.radius) / (pi.radius+pj.radius)
 
+            # ------------------------------------------------------------------------------------------------------(18)
             if norm_cij < pi.radius + pj.radius:
                 # interpenetration
-                interpenetration = pi.radius + pj.radius - np.dot((pj.pred_position - pi.pred_position), normal_ij)
+                interpenetration = pi.radius + pj.radius - np.dot((pj.position - pi.position), normal_ij)
                 interpenetration_vel = -(pj.velocity - pi.velocity) * normal_ij
                 interpenetration_acc = -(pj.acceleration - pi.acceleration) * normal_ij
                 v = 1 / (pi.radius + pj.radius) * (pi.velocity - pj.velocity) * (pi.radius - pj.radius)
-                # print("contact", "penetra", interpenetration, interpenetration_vel, v)
+
                 i_acc = np.linalg.norm(interpenetration_acc)
 
                 # -- kinematik für t_ij im lokalen Koordinatensystem
@@ -102,8 +108,8 @@ for t in np.arange(0, simtime, dt):
                 r_jic = (pj.radius - (
                             pi.elstiffnesn / (pi.elstiffnesn + pj.elstiffnesn)) * interpenetration) * normal_ji
                 # position of the contact point
-                p_ijc = pi.pred_position + r_ijc  # ortsvektor/point of contact from p1
-                p_jic = pj.pred_position + r_jic  # point of contact from p2 ==p_ijc
+                p_ijc = pi.position + r_ijc  # ortsvektor/point of contact from p1
+                p_jic = pj.position + r_jic  # point of contact from p2 ==p_ijc
                 # velocity at the contact point
                 v_ij = (np.cross(pj.rotation_vel, r_jic) + pj.velocity) - (np.cross(pi.rotation_vel, r_ijc) + pi.velocity)
                 # decomposition in the local reference frame defined at the contact point
@@ -120,23 +126,24 @@ for t in np.arange(0, simtime, dt):
                     t_ij[2] = 0
                     t_ij = t_ij / np.linalg.norm(t_ij)
 
-
-                #print(t_ij)
-
                 # -- compute increment of tangential displacement (for updating F_t)
                 # translation of point of contact
                 u_ij = (np.cross(pj.rotation_vel, r_jic) + pj.velocity) - (
                         np.cross(pi.rotation_vel, r_ijc) + pi.velocity)
-                # u_ij = 0
-                #print("uij: ", u_ij)
+                # print("uij: ", u_ij)
 
                 # increment of tangential displacement
                 increment_of_t_displacement = np.linalg.norm(u_ij * t_ij)
 
                 # -- forces
-                f_t = min(mu*np.dot(pi.force, normal_ij), np.dot(pi.force, t_ij) + k_t * increment_of_t_displacement)
+                f_t = min(mu*np.dot(pi.force, normal_ij), np.dot(pi.force, t_ij) + k_t * increment_of_t_displacement) # aus t
+                # + f_t aus drehmoment
                 pi.force = np.array(-interpenetration * elstiffnesn_eq * normal_ij - interpenetration_vel * damp_coeff * normal_ij - f_t * t_ij)  # nicht normal_ij!! # k_t * f_t oder mu* np.array(pi.force) geht nicht
                 pj.force = - pi.force
+
+                # -- torque
+                pi.torque = f_t * r_ijc
+                pj.torque = - f_t * r_jic
 
             else:
                 interpenetration = 0
@@ -144,28 +151,78 @@ for t in np.arange(0, simtime, dt):
                 interpenetration_acc = 0
                 pi.force = [0, 0, 0]
                 pj.force = [0, 0, 0]
-
-
+                pi.torque = 0
+                pj.torque = 0
+            # ------------------------------------------------------------------------------------------------------(18)
 
             rel_vel = np.linalg.norm(pi.velocity - pj.velocity)
-            omega = np.sqrt((elstiffnesn_eq) / m_eq)  # wie bestimmt man systemsteifigkeit für k(pi) =/= k(pj)
-            psi = damp_coeff / (2 * m_eq)  # = 0 für lin. elastisch und kann später mit coeff of restitution bestimmt werden
+            omega = np.sqrt(elstiffnesn_eq / m_eq)  # wie bestimmt man systemsteifigkeit für k(pi) =/= k(pj)
+            psi = damp_coeff / (2 * m_eq)  # =0 für lin. elastisch wird später mit COR bestimmt werden
 
             interpenetration_max = (rel_vel / omega) * np.exp(-(psi / omega) * np.arctan(omega / psi))
-            # print("max_penetr: ", interpenetration_max)
-            # i_acc = np.linalg.norm(interpenetration_acc)
-            # print("i_acc :", i_acc)
+
+            # ------------------------------------------------------------------------------------------------------(19)
+            pi.acceleration = np.array(pi.force)/pi.mass
+            pi.rotation_acc = np.array(pi.torque)/pi.moment_of_inertia  # (26)
+            # ------------------------------------------------------------------------------------------------------(19)
+
+            # -------------------------------------------------------------------------------------------------------(20)
+            pi_new_vel_05 = pi.velocity + 0.5 * dt * pi.acceleration
+            pi_new_rot_vel_05 = pi.rotation_vel + 0.5 * dt * pi.rotation_acc  # (27)
+            # -------------------------------------------------------------------------------------------------------(20)
+
+            # -------------------------------------------------------------------------------------------------------(21)
+            pi.position = pi.position + dt * pi_new_vel_05
+            pi.rotation = pi.rotation + dt * pi_new_rot_vel_05
+            # -------------------------------------------------------------------------------------------------------(21)
+            pj.acceleration = np.array(pj.force)/pj.mass
+            pj.rotation_acc = np.array(pj.torque) / pj.moment_of_inertia
+            pj_new_vel_05 = pj.velocity + 0.5 * dt * pj.acceleration
+            pj_new_rot_vel_05 = pj.rotation_vel + 0.5 * dt * pj.rotation_acc
+            pj.position = pj.position + dt * pj_new_vel_05
+            pj.rotation = pj.rotation + dt * pj_new_rot_vel_05
+
+            # ------------------------------------------------------------------------------------------------------(22)
+            if norm_cij < pi.radius + pj.radius:
+                # -- forces
+                f_t = min(mu * np.dot(pi.force, normal_ij), np.dot(pi.force, t_ij) + k_t * increment_of_t_displacement)
+                pi.force = np.array(
+                    -interpenetration * elstiffnesn_eq * normal_ij - interpenetration_vel * damp_coeff * normal_ij - f_t * t_ij)  # nicht normal_ij!! # k_t * f_t oder mu* np.array(pi.force) geht nicht
+                pj.force = - pi.force
+
+                # -- torque
+                pi.torque = f_t * r_ijc
+                pj.torque = - f_t * r_jic
+            else:
+                pi.force = 0
+                pj.force = 0
+                pi.torque = 0
+                pj.torque = 0
+
+            # ------------------------------------------------------------------------------------------------------(22)
+
+            # ------------------------------------------------------------------------------------------------------(23)
+            # new_force = np.dot(np.dot(pi.force, normal_ij),
+                               # normal_ij)  # nur die normale Komponente = new_force das ist falsch
+
+            pi.acceleration = np.array(pi.force) * (1 / pi.mass)
+            pi.rotation_acc = np.array(pi.torque) / pi.moment_of_inertia
+            # ------------------------------------------------------------------------------------------------------(23)
+
+            # ------------------------------------------------------------------------------------------------------(24)
+            pi.velocity = pi_new_vel_05 + 0.5 * dt * pi.acceleration
+            pi.rotation_vel = pi_new_rot_vel_05 + 0.5 * dt * pi.rotation_acc
+            # ------------------------------------------------------------------------------------------------------(24)
+
+            pj.acceleration = np.array(pj.force) * (1 / pj.mass)
+            pj.rotation_acc = np.array(pj.torque) / pj.moment_of_inertia
+            pj.velocity = pj_new_vel_05 + 0.5 * dt * pj.acceleration
+            pj.rotation_vel = pj_new_rot_vel_05 + 0.5 * dt * pj.rotation_acc
 
 
-            ##############################################
-            # bisher haben partikel bei schrägen stößen beschleunigt, da die gesamte Kraft pi.force im Schwerpunkt
-            # angesetzt wurde, anstatt nur die normale komponente zu nehmen
-            #############################################
-            fn.update_position(pi, dt, normal_ij)
-            fn.update_position(pj, dt, normal_ji)
-            #fn.update_position_single_particle(pi, dt)
-            #fn.update_position_single_particle(pj, dt)
             energy, energy_el, energy_i, energy_j, energy_damp = fn.calculate_energies(pi, pj, interpenetration, interpenetration_vel, damp_coeff, elstiffnesn_eq)
+            energy_rot_i = 0.5 * pi.moment_of_inertia * pi.rotation_vel**2
+            energy_rot_j = 0.5 * pj.moment_of_inertia * pj.rotation_vel ** 2
             #print(pi.position, pi.velocity, pi.acceleration, pi.force)
             #print(pj.position, pj.velocity, pj.acceleration, pj.force)
             #print('--------------------------')
@@ -179,7 +236,11 @@ for t in np.arange(0, simtime, dt):
             en_damp.append(energy_damp)
             en_dissipated += energy_damp
             en_dissipated_t.append(en_dissipated)
+            en_rot_i.append(energy_rot_i)
+            en_rot_j.append(energy_rot_j)
 
+            # I = 1/2 * m * r**2
+            # E_rot = 1/2 * I * omega**2
 
 
     # contact particles - boundaries
@@ -208,6 +269,10 @@ for t in np.arange(0, simtime, dt):
             chosen_c = fn.colour_list[indexc]  # choosing the colour
             chosen_c_rgb = fn.get_rgb(chosen_c)  # turning colour name to rgb
             pg.draw.circle(screen, chosen_c_rgb, (n_particle.position[0], n_particle.position[1]), n_particle.radius)
+
+            # pg.draw.line(screen, (255, 255, 255), (p_ijc[0], p_ijc[1]),
+                         # (n_particle.position[0], n_particle.position[1]), width=5)
+
 
     for n_boundary in Boundary.all_boundaries:
         pg.draw.line(screen, (255, 255, 255), (n_boundary.point_1[0], n_boundary.point_1[1]),
@@ -250,9 +315,11 @@ at2.patch.set_boxstyle("round,pad=0.,rounding_size=0.2")
 ax.add_artist(at2)
 
 
-file_name = "alter stand lokal"
+file_name = "aktuell, central, schief, sqrt(2) langsam"
 plt.savefig("C:/Users/Jaist/Documents/GitHub/BA_DEM/plots_2501/" + file_name + ".png")
 
 print("Gesamtenergie vor Stoß: ", en[0])
+print("Rotationsenergie vor Stoß: ", en_rot_i[0] + en_rot_j[0])
 print("Gesamtenergie nach Stoß: ", en[-1])
+print("Rotationsenergie nach Stoß: ", en_rot_i[-1] + en_rot_j[-1])
 

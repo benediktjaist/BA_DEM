@@ -3,25 +3,22 @@ import numpy as np
 
 
 class Particle:
-    # all_particles = []
+    all_particles = []
 
-    def __init__(self, position, velocity, acceleration, force, rotation, rotation_vel, rotation_acc, torque, radius, elstiffnesn,
-                 mass, pred_position, interpenetration_vel):
+    def __init__(self, position, velocity, acceleration, rotation_vel, force, radius, elstiffnesn, mass, pred_position,
+                 interpenetration_vel):
         self.position = position
         self.velocity = velocity
         self.acceleration = acceleration
-        self.force = force
-        self.rotation = rotation
         self.rotation_vel = rotation_vel
-        self.rotation_acc = rotation_acc
-        self.torque = torque
+        self.force = force
         self.radius = radius
         self.elstiffnesn = elstiffnesn
         self.mass = mass
         self.pred_position = pred_position
         self.interpenetration_vel = interpenetration_vel
-        self.moment_of_inertia = 0.5 * self.mass * self.radius * self.radius
-        # Particle.all_particles.append(self)
+
+        Particle.all_particles.append(self)
 
 
 class Boundary:
@@ -60,7 +57,6 @@ class system:
         for t in np.arange(0, simtime, dt):
            #loop of Particle
            for n_particle in Particle.list_of_particles:  
-
                 #integration of motion with verlocity verlet (predict)
                 pred_vel05 = n_particle.velocity + 0.5*dt*n_particle.acceleration
                # print(pred_vel05)
@@ -69,4 +65,3 @@ class system:
                 n_particle.pred_posi = pred_posi
               #  print(pred_vel05) #testing with arrays
               '''
-
