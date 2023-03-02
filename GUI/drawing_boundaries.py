@@ -3,7 +3,7 @@ from Boundary import Boundary
 from Colours import get_colour_tuple
 
 
-def boundary_creator(screen):
+def boundary_creator():
     # Set the width and height of the screen [width, height]
     WIDTH = 700
     HEIGHT = 500

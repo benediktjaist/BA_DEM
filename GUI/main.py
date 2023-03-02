@@ -76,7 +76,7 @@ def main():
                     #pygame.display.init()  # Initialize Pygame again
                     #pygame.display.set_mode((WIDTH, HEIGHT))  # Create a new Pygame window with original size
                 elif create_boundaries_button.is_clicked(pos):
-                    boundaries = boundary_creator(WIN)
+                    boundaries = boundary_creator()
                     print(len(boundaries))
                     for boundary in boundaries:
                         print('end point ', boundary.end_point)
