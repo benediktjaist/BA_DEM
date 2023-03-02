@@ -9,6 +9,7 @@ class NumParticlesDialog(QtWidgets.QDialog):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setWindowTitle('Number of Particles')
+        self.setGeometry(2500, 1300, 200, 100)  # (position x, position y, size x, size y)
 
         # Initialize widgets
         self.num_particles_label = QtWidgets.QLabel('Enter number of particles:')
@@ -58,6 +59,7 @@ class ParticleCreator(QtWidgets.QDialog):
         self.mass_edit = QtWidgets.QLineEdit('100')
         self.create_button = QtWidgets.QPushButton('Create')
         self.cancel_button = QtWidgets.QPushButton('Cancel')
+        self.setGeometry(2500, 1300, 400, 300)  # (position x, position y, size x, size y)
 
         # Set default values for position and velocity
         if default_position is not None:
