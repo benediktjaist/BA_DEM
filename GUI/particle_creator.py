@@ -1,10 +1,12 @@
 from PyQt5 import QtWidgets, QtGui
 import sys
+from Particle import Particle
+'''
 class Particle:
     def __init__(self, position, velocity):
         self.position = position
         self.velocity = velocity
-
+'''
 
 class ParticleCreator(QtWidgets.QDialog):
     def __init__(self, parent=None):

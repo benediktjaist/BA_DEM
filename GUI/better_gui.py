@@ -9,7 +9,7 @@ class NumParticlesDialog(QtWidgets.QDialog):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setWindowTitle('Number of Particles')
-        self.setGeometry(2500, 1300, 200, 100)  # (position x, position y, size x, size y)
+        self.setGeometry(1000, 500, 200, 100)  # (position x, position y, size x, size y)
 
         # Initialize widgets
         self.num_particles_label = QtWidgets.QLabel('Enter number of particles:')
@@ -59,7 +59,7 @@ class ParticleCreator(QtWidgets.QDialog):
         self.mass_edit = QtWidgets.QLineEdit('100')
         self.create_button = QtWidgets.QPushButton('Create')
         self.cancel_button = QtWidgets.QPushButton('Cancel')
-        self.setGeometry(2500, 1300, 400, 300)  # (position x, position y, size x, size y)
+        self.setGeometry(1000, 500, 400, 300)  # (position x, position y, size x, size y)
 
         # Set default values for position and velocity
         if default_position is not None:
@@ -95,7 +95,7 @@ class ParticleCreator(QtWidgets.QDialog):
 
     def create_particle(self):
         """
-        Create a particle object and clear the input fields.
+        Create ip1 particle object and clear the input fields.
         """
         position = np.array(list(map(float, self.position_edit.text().split(','))) + [0])
         velocity = np.array(list(map(float, self.velocity_edit.text().split(','))) + [0])

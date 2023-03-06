@@ -40,7 +40,7 @@ class Boundary:
 
 # def set_position(self, position):
 #    if position < 0:
-#       print("try a position > 0")
+#       print("try ip1 position > 0")
 #   else:
 #       self.position = position
 #  position = property(get_position, set_position)

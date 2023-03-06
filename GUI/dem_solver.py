@@ -13,7 +13,7 @@ from typing import List
 
 
 class PositionTracker:
-    # particle_position_tracker is a list of lists
+    # particle_position_tracker is ip1 list of lists
     # with the first index corresponding to time and the second index corresponding to particle id
     def __init__(self, particles: List[Particle], simtime: float, dt: float):
         self.particles = particles
@@ -33,8 +33,9 @@ class PositionTracker:
 
 
 class System:
-    def __init__(self, particles: List[Particle], dt: float, simtime: float, mu: float, coeff_of_restitution: float):
+    def __init__(self, particles: List[Particle], boundaries: List[Boundary], dt: float, simtime: float, mu: float, coeff_of_restitution: float):
         self.particles = particles
+        self.boundaries = boundaries
         self.dt = dt
         self.simtime = simtime
         self.mu = mu
@@ -143,6 +144,13 @@ class System:
                         pj.force = [0, 0, 0]
                         pi.torque = 0
                         pj.torque = 0
+
+                    # contact with boundaries
+                    # for particle pi.
+
+                    # for particle pj.
+
+
 
                     rel_vel = np.linalg.norm(pi.velocity - pj.velocity)
                     omega = np.sqrt(elstiffnesn_eq / m_eq)

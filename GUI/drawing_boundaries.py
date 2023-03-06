@@ -17,15 +17,15 @@ def boundary_creator():
     pygame.init()
 
     # Set the screen size
-    screen = pygame.display.set_mode((WIDTH, HEIGHT))
+    screen = pygame.display.set_mode((WIDTH, HEIGHT), pygame.RESIZABLE)
 
     # Set the window title
-    pygame.display.set_caption("Draw a line on the grid with your mouse to create a BOUNDARY // to start click anywhere")
+    pygame.display.set_caption("Draw ip1 line on the grid with your mouse to create ip1 BOUNDARY // to start click anywhere")
 
     # Set the font
     font = pygame.font.Font(None, 30)
 
-    # Create a clock to control the frame rate
+    # Create ip1 clock to control the frame rate
     clock = pygame.time.Clock()
 
     # Initialize the starting and ending points for the line
@@ -79,12 +79,12 @@ def boundary_creator():
                         lines.append((start_pos, end_pos))
                         # Draw the red line
                         pygame.draw.line(screen, get_colour_tuple('red'), start_pos, end_pos, 5)
-                        # Create a boundary with the two points of the line and add it to the list of boundaries
-                        boundaries.append(Boundary(start_pos, end_pos))
+                        # Create ip1 boundary with the two points of the line and add it to the list of boundaries
+                        # boundaries.append(Boundary(start_pos, end_pos))
                     # Clear the list of lines
                     lines = []
 
-                    # Create a boundary with the two points of the line and add it to the list of boundaries
+                    # Create ip1 boundary with the two points of the line and add it to the list of boundaries
                     if start_pos != end_pos:
                         boundaries.append(Boundary(start_pos, end_pos))
 
@@ -126,7 +126,7 @@ def boundary_creator():
                     lines.append((start_pos, end_pos))
                     # Draw the red line
                     pygame.draw.line(screen, get_colour_tuple('red'), start_pos, end_pos, 5)
-                    # Create a boundary with the two points of the line and add it to the list of boundaries
+                    # Create ip1 boundary with the two points of the line and add it to the list of boundaries
                     boundaries.append(Boundary(start_pos, end_pos))
                     # Clear the list of lines
                     lines = []

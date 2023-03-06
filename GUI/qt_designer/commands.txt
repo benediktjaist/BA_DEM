@@ -1,0 +1,6 @@
+cd One... tab
+cd .. --> zurück
+
+pyuic6 MainWindow.ui -o MainWindow.py
+im richtigen Directory und dann kommt der code raus
+UI files am besten im Pycharm directory speichern dann kannst direkt überschreiben

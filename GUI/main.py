@@ -11,7 +11,7 @@ WIDTH, HEIGHT = 900, 500
 WIN = pygame.display.set_mode((WIDTH, HEIGHT), pygame.RESIZABLE)
 
 
-# Create a button class
+# Create ip1 button class
 class Button:
     def __init__(self, x, y, width, height, text):
         self.rect = pygame.Rect(x, y, width, height)
@@ -74,7 +74,7 @@ def main():
                 if create_particles_button.is_clicked(pos):
                     particles = particle_creator()
                     #pygame.display.init()  # Initialize Pygame again
-                    #pygame.display.set_mode((WIDTH, HEIGHT))  # Create a new Pygame window with original size
+                    #pygame.display.set_mode((WIDTH, HEIGHT))  # Create ip1 new Pygame window with original size
                 elif create_boundaries_button.is_clicked(pos):
                     boundaries = boundary_creator()
                     print(len(boundaries))
@@ -87,7 +87,7 @@ def main():
                     system.run_simulation()
                     positions = system.get_positions()
                 elif show_animation_button.is_clicked(pos):
-                    # Open a new Pygame window
+                    # Open ip1 new Pygame window
                     animation_win = pygame.display.set_mode((WIDTH+200, HEIGHT+200))
 
                     # Draw particles for each time step
