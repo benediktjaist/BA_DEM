@@ -6,7 +6,8 @@ class Particle:
     # all_particles = []
 
     def __init__(self, position, velocity, acceleration, force, rotation, rotation_vel, rotation_acc, torque, radius, elstiffnesn,
-                 mass, pred_position, interpenetration_vel):
+                 mass, pred_position, interpenetration_vel, pp_force=np.array([0, 0, 0]), pp_torque=np.array([0, 0, 0]),
+                 pb_force=np.array([0, 0, 0]), pb_torque=np.array([0, 0, 0])):
         self.position = position
         self.velocity = velocity
         self.acceleration = acceleration
@@ -22,3 +23,17 @@ class Particle:
         self.interpenetration_vel = interpenetration_vel
         self.moment_of_inertia = 0.5 * self.mass * self.radius * self.radius
         # Particle.all_particles.append(self)
+        self.historic_positions = []
+        self.historic_rotations = []
+        self.pp_force = pp_force
+        self.pp_torque = pp_torque
+        self.pb_force = pb_force
+        self.pb_torque = pb_torque
+        self.energy = []
+
+    def __str__(self):
+        return f"Position: {self.position}\nVelocity: {self.velocity}\nAcceleration: {self.acceleration}\n" \
+               f"Force: {self.force}\nRotation: {self.rotation}\nRotation Velocity: {self.rotation_vel}\n" \
+               f"Rotation Acceleration: {self.rotation_acc}\nTorque: {self.torque}\nRadius: {self.radius}\n" \
+               f"Elastic Stiffness: {self.elstiffnesn}\nMass: {self.mass}\n" \
+               f"Predicted Position: {self.pred_position}\nInterpenetration Velocity: {self.interpenetration_vel}"

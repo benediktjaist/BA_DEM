@@ -19,4 +19,5 @@ class Boundary:
         t = self.calc_axis_section()
         return m * x + t
 
-
+    def get_vert_line(self):
+        return self.start_point[0]

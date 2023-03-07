@@ -16,7 +16,7 @@ center = (1, 1)
 
 # check if boundary can be written as linear equation
 if boundary.start_point[0] == boundary.end_point[0]:
-    vline = True
+
     vertical_line = boundary.start_point[0]
     plt.axvline(x=vertical_line, color='r')
 
@@ -53,7 +53,7 @@ if boundary.start_point[0] == boundary.end_point[0]:
     plt.show()
 
 else:
-    vline = False
+
     # compute the circle equations
     x = smp.symbols('x')
     y1 = smp.sqrt(radius ** 2 - (x - center[0]) ** 2) + center[1]

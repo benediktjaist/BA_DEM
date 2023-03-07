@@ -5,11 +5,12 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.offsetbox import AnchoredText
 import matplotlib.colors as mcolors
-from classes import Particle
-from classes import Boundary
+from Particle import Particle
+from Boundary import Boundary
 import functions as fn
 import test_cor as cor
 from typing import List
+import sympy as smp
 
 
 class PositionTracker:
@@ -19,10 +20,10 @@ class PositionTracker:
         self.particles = particles
         self.simtime = simtime
         self.dt = dt
-        self.positions = [[] for _ in range(int(self.simtime / self.dt) + 1)]
-        self.rotations = [[] for _ in range(int(self.simtime / self.dt) + 1)]
+        self.positions = [[] for _ in range(int(self.simtime / self.dt))]
+        self.rotations = [[] for _ in range(int(self.simtime / self.dt))]
         for i in range(len(self.positions)):
-            for particle in particles:
+            for particle in self.particles:
                 self.positions[i].append([])
                 self.rotations[i].append([])
 
@@ -61,7 +62,7 @@ class System:
         return self.position_tracker.positions
 
     def run_simulation(self):
-        for t in np.arange(0, self.simtime, self.dt):
+        for time_step_count, t in enumerate(np.arange(0, self.simtime, self.dt)):
             for n_particle in self.particles:
                 pred_vel05 = n_particle.velocity + 0.5 * self.dt * n_particle.acceleration
                 pred_posi = n_particle.position + self.dt * pred_vel05
@@ -128,45 +129,182 @@ class System:
                         else:
                             f_t = np.linalg.norm(tan_force)
 
-                        pi.force = np.array(-interpenetration * elstiffnesn_eq * normal_ij - interpenetration_vel * self.damp_coeff * normal_ij - f_t * t_ij)  # nicht normal_ij!! # k_t * f_t oder mu* np.array(pi.force) geht nicht
-                        pj.force = - pi.force
+                        pi.pp_force = np.array(-interpenetration * elstiffnesn_eq * normal_ij - interpenetration_vel * self.damp_coeff * normal_ij - f_t * t_ij)  # nicht normal_ij!! # k_t * f_t oder mu* np.array(pi.force) geht nicht
+                        pj.pp_force = - pi.force
 
                         # -- torque
                         moment = f_t * np.linalg.norm(r_ijc)
-                        pi.torque = np.array([0, 0, moment])
-                        pj.torque = pi.torque
+                        pi.pp_torque = np.array([0, 0, moment])
+                        pj.pp_torque = pi.torque
 
                     else:
                         interpenetration = 0
                         interpenetration_vel = 0
                         interpenetration_acc = 0
-                        pi.force = [0, 0, 0]
-                        pj.force = [0, 0, 0]
-                        pi.torque = 0
-                        pj.torque = 0
+                        pi.pp_force = np.array([0, 0, 0])
+                        pj.pp_force = np.array([0, 0, 0])
+                        pi.pp_torque = np.array([0, 0, 0])
+                        pj.pp_torque = np.array([0, 0, 0])
 
-                    # contact with boundaries
-                    # for particle pi.
+            # contact with boundaries
+            for pi in self.particles:
+                for boundary in self.boundaries:
+                    # check if boundary can be written as linear equation
+                    if boundary.start_point[0] == boundary.end_point[0]:
 
-                    # for particle pj.
+                        # compute the distance between the center of the circle and the vertical line
+                        dist = abs(pi.position[0] - boundary.start_point[0])
 
+                        # check if particle intersects with boundary
+                        if dist <= pi.radius:
+                            # solve for intersection points
+                            y_intercepts = []
+                            ip1 = np.sqrt(pi.radius ** 2 - (boundary.start_point[0] - pi.position[0]) ** 2) + pi.position[1]
+                            ip2 = - np.sqrt(pi.radius ** 2 - (boundary.start_point[0] - pi.position[0]) ** 2) + pi.position[1]
+                            y_intercepts.append(ip1)
+                            y_intercepts.append(ip2)
 
+                            # compute the point of contact (poc)
+                            y_mid = sum(y_intercepts) / 2
+                            poc = np.array([boundary.start_point[0], y_mid, 0])
+                            print('numpy: ', poc)
 
-                    rel_vel = np.linalg.norm(pi.velocity - pj.velocity)
-                    omega = np.sqrt(elstiffnesn_eq / m_eq)
-                    psi = self.damp_coeff / (2 * m_eq)
+                            normal_ib = (poc - pi.position) / np.linalg.norm(poc - pi.position)
 
-                    interpenetration_max = (rel_vel / omega) * np.exp(-(psi / omega) * np.arctan(omega / psi))
+                            elstiffnesn_eq = pi.elstiffnesn
+                            m_eq = pi.mass
+                            radius_eq = pi.radius
+                            k_t = elstiffnesn_eq * 0.8
 
-                    pi.acceleration = np.array([0, 0, 0]) + np.array(pi.force) * (1 / pi.mass) # to change gravity
-                    pi.rotation_acc = np.array(pi.torque) / pi.moment_of_inertia
-                    pi.velocity = pi.velocity + 0.5 * self.dt * pi.acceleration
-                    pi.rotation_vel = pi.rotation_vel + 0.5 * self.dt * pi.rotation_acc
+                            interpenetration = pi.radius - np.dot((poc - pi.position), normal_ib)
+                            interpenetration_vel = -np.dot(pi.velocity, normal_ib)
 
-                    pj.acceleration = np.array(pj.force) * (1 / pj.mass)
-                    pj.rotation_acc = np.array(pj.torque) / pj.moment_of_inertia
-                    pj.velocity = pj.velocity + 0.5 * self.dt * pj.acceleration
-                    pj.rotation_vel = pj.rotation_vel + 0.5 * self.dt * pj.rotation_acc
-                    self.position_tracker.update(int(t / self.dt))
-                    # important assumption: simtime is integer divisible by dt
-                    print(pi.position)
+                            r_ibc = poc - pi.position
+
+                            # velocity at the contact point
+                            v_ib = -(np.cross(pi.rotation_vel, r_ibc) + pi.velocity)
+                            # decomposition in the local reference frame defined at the contact point
+                            v_ib_n = (np.dot(v_ib, normal_ib) * normal_ib)
+                            v_ib_t = v_ib - v_ib_n
+
+                            # tangential unit vector should be tangential_ij
+                            if np.linalg.norm(v_ib_t) >= 0.001:  # welche grenze?
+                                t_ib = v_ib_t / np.linalg.norm(v_ib_t)
+                            else:
+                                t_ib = 0
+                            print(t_ib)
+                            increment_of_t_displacement = np.linalg.norm(v_ib_t) * self.dt
+
+                            max_friction_force = self.mu * np.dot(pi.force, normal_ib)
+                            tan_force = np.dot(pi.force, t_ib) + k_t * increment_of_t_displacement
+
+                            if np.linalg.norm(max_friction_force) < np.linalg.norm(tan_force):
+                                f_t = np.linalg.norm(max_friction_force)
+                            else:
+                                f_t = np.linalg.norm(tan_force)
+
+                            pi.pb_force = np.array(
+                                -interpenetration * elstiffnesn_eq * normal_ib - interpenetration_vel * self.damp_coeff * normal_ib - f_t * t_ib)  # nicht normal_ij!! # k_t * f_t oder mu* np.array(pi.force) geht nicht
+
+                            # -- torque
+                            moment = - f_t * np.linalg.norm(r_ibc)
+                            pi.pb_torque = np.array([0, 0, moment])
+
+                        else:
+                            print('they do not intersect')
+                            pi.pb_force = np.array([0, 0, 0])
+                            pi.pb_torque = np.array([0, 0, 0])
+
+                    else:
+
+                        # compute the circle equations
+                        x = smp.symbols('x')
+                        y1 = smp.sqrt(pi.radius ** 2 - (x - pi.position[0]) ** 2) + pi.position[1]
+                        y2 = -smp.sqrt(pi.radius ** 2 - (x - pi.position[0]) ** 2) + pi.position[1]
+                        y3 = boundary.get_lin_eq()
+
+                        solution1 = smp.solveset(y1 - y3, x, domain=smp.Reals)
+                        solution2 = smp.solveset(y2 - y3, x, domain=smp.Reals)
+
+                        if solution1 or solution2:
+                            # solve for intersection points
+                            ip1 = smp.solve(y1 - y3, x)
+                            ip2 = smp.solve(y2 - y3, x)
+                            nullstellen = ip1 + ip2
+
+                            # delete duplicates
+                            nullstellen = [x for i, x in enumerate(nullstellen) if x not in nullstellen[:i]]
+
+                            # compute point of contact (poc)
+                            x_mid = sum(nullstellen) / 2
+                            poc = np.array([x_mid, y3.evalf(subs={x: x_mid}), 0])
+                            print('sympy: ', poc)
+
+                            normal_ib = (poc - pi.position) / np.linalg.norm(poc - pi.position)
+
+                            elstiffnesn_eq = pi.elstiffnesn
+                            m_eq = pi.mass
+                            radius_eq = pi.radius
+                            k_t = elstiffnesn_eq * 0.8
+
+                            interpenetration = pi.radius - np.dot((poc - pi.position), normal_ib)
+                            interpenetration_vel = -np.dot(-pi.velocity, normal_ib) #VZ
+
+                            r_ibc = poc - pi.position
+
+                            # velocity at the contact point
+                            v_ib = -(np.cross(pi.rotation_vel, r_ibc) + pi.velocity)
+                            # decomposition in the local reference frame defined at the contact point
+                            v_ib_n = (np.dot(v_ib, normal_ib) * normal_ib)
+                            v_ib_t = v_ib - v_ib_n
+
+                            # tangential unit vector should be tangential_ij
+                            if np.linalg.norm(v_ib_t) >= 0.001:  # welche grenze?
+                                t_ib = v_ib_t / np.linalg.norm(v_ib_t)
+                            else:
+                                t_ib = 0
+
+                            increment_of_t_displacement = np.linalg.norm(v_ib_t) * self.dt
+
+                            max_friction_force = self.mu * np.dot(pi.force, normal_ib)
+                            tan_force = np.dot(pi.force, t_ib) + k_t * increment_of_t_displacement
+
+                            if np.linalg.norm(max_friction_force) < np.linalg.norm(tan_force):
+                                f_t = np.linalg.norm(max_friction_force)
+                            else:
+                                f_t = np.linalg.norm(tan_force)
+
+                            pi.force = np.array(
+                                -interpenetration * elstiffnesn_eq * normal_ib - interpenetration_vel * self.damp_coeff * normal_ib - f_t * t_ib)  # nicht normal_ij!! # k_t * f_t oder mu* np.array(pi.force) geht nicht
+
+                            # -- torque
+                            moment = - f_t * np.linalg.norm(r_ibc)
+                            pi.torque = np.array([0, 0, moment])
+                        else:
+                            print("they do not intersect")
+                            pi.pb_force = np.array([0, 0, 0])
+                            pi.pb_torque = np.array([0, 0, 0])
+
+                            '''
+                            rel_vel = np.linalg.norm(pi.velocity - pj.velocity)
+                            omega = np.sqrt(elstiffnesn_eq / m_eq)
+                            psi = self.damp_coeff / (2 * m_eq)
+        
+                            interpenetration_max = (rel_vel / omega) * np.exp(-(psi / omega) * np.arctan(omega / psi))
+                            '''
+
+            for particle in self.particles:
+                particle.force = particle.pp_force + particle.pb_force
+                particle.torque = particle.pp_torque + particle.pb_torque
+                print(particle.force)
+                particle.acceleration = np.array([0, 0, 0]) + np.array(particle.force) * (1 / particle.mass) # to change gravity
+                particle.rotation_acc = np.array(particle.torque) / particle.moment_of_inertia
+                particle.velocity = particle.velocity + 0.5 * self.dt * particle.acceleration
+                particle.rotation_vel = particle.rotation_vel + 0.5 * self.dt * particle.rotation_acc
+                #self.position_tracker.update(time_step_count)
+                particle.historic_positions.append(particle.position)
+                particle.historic_rotations.append(particle.rotation)
+                print(particle.historic_positions[-1])
+                particle.energy.append(0.5*particle.mass*(np.linalg.norm(particle.velocity))**2
+                                       + 0.5*particle.moment_of_inertia*(np.linalg.norm(particle.rotation_vel))**2)
+

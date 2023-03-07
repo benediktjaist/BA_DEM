@@ -3,6 +3,7 @@ from Boundary import Boundary
 from Colours import get_colour_tuple
 
 
+
 def boundary_creator():
     # Set the width and height of the screen [width, height]
     WIDTH = 1300
@@ -17,7 +18,7 @@ def boundary_creator():
     pygame.init()
 
     # Set the screen size
-    screen = pygame.display.set_mode((WIDTH, HEIGHT),pygame.SCALED ) # pygame.RESIZABLE
+    screen = pygame.display.set_mode((WIDTH, HEIGHT), pygame.RESIZABLE)
     pygame.transform.scale(screen, (WIDTH, HEIGHT))
 
     # Set the window title
@@ -47,9 +48,6 @@ def boundary_creator():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 done = True
-            elif event.type == pygame.VIDEORESIZE:
-                pygame.transform.scale(screen, (1300, 800))
-                pygame.display.init()
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 # If the left mouse button is pressed, snap the starting position to the nearest node of the grid
                 if event.button == 1:
@@ -73,6 +71,8 @@ def boundary_creator():
 
                     # Update the screen
                     pygame.display.flip()
+
+
             elif event.type == pygame.MOUSEBUTTONUP:
                 # If the left mouse button is released, add the line to the list of lines
                 if event.button == 1:

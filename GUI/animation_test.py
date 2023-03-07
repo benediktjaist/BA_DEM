@@ -27,9 +27,9 @@ positions = []
 time_steps = []
 # v = s/t -> s = v*t
 v = 20
-dt = 0.0001
+dt = 0.01
 
-for x in np.arange(0, 10, dt):
+for x in np.arange(0, 2, dt):
     time_steps.append(round(x, 10))
     x = x*v
     positions.append((round(x+100, 10), 100))
@@ -58,9 +58,12 @@ win = pygame.display.set_mode((win_width, win_height), pygame.HIDDEN)
 circle_radius = 10
 circle_color = BLACK
 # Set up the video writer with FFmpeg format
+#video_writer = imageio.get_writer(video_file, fps=fps, codec='libx264',
+                                  #ffmpeg_params=['-pix_fmt', 'yuv420p', '-vf', 'transpose=1,hflip',
+                                                 #'-ip2:v', '10M', '-preset', 'slow', '-probesize', '1000M', '-analyzeduration', '1000M'])
 video_writer = imageio.get_writer(video_file, fps=fps, codec='libx264',
                                   ffmpeg_params=['-pix_fmt', 'yuv420p', '-vf', 'transpose=1,hflip',
-                                                 '-ip2:v', '10M', '-preset', 'slow', '-probesize', '1000M', '-analyzeduration', '1000M'])
+                                                  '-preset', 'slow', '-probesize', '1000M', '-analyzeduration', '1000M'])
 
 
 # animation loop
@@ -107,8 +110,7 @@ for i in range(num_video_frames):
     idx = np.argmin(np.abs(np.array(time_steps) - t))
     x, y = positions[idx]
 '''
-print(len(positions))
+print(video_frame_indices)
 print(len(video_frame_indices))
-print(num_all_frames)
-print(num_video_frames)
+
 

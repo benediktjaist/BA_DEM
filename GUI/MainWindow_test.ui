@@ -27,45 +27,6 @@
      <string>Help</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="secondWindow">
-    <property name="geometry">
-     <rect>
-      <x>490</x>
-      <y>350</y>
-      <width>168</width>
-      <height>51</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>secondWindow</string>
-    </property>
-   </widget>
-   <widget class="QProgressBar" name="progressBar_2">
-    <property name="geometry">
-     <rect>
-      <x>310</x>
-      <y>140</y>
-      <width>136</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="value">
-     <number>24</number>
-    </property>
-   </widget>
-   <widget class="QProgressBar" name="progressBar_3">
-    <property name="geometry">
-     <rect>
-      <x>300</x>
-      <y>270</y>
-      <width>136</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="value">
-     <number>24</number>
-    </property>
-   </widget>
    <widget class="QLabel" name="TUM_Logo">
     <property name="enabled">
      <bool>true</bool>
@@ -96,9 +57,9 @@
     </property>
     <layout class="QVBoxLayout" name="verticalLayout">
      <item>
-      <widget class="QPushButton" name="Particles">
+      <widget class="QPushButton" name="secondWindow">
        <property name="text">
-        <string>Create Particles</string>
+        <string>secondWindow</string>
        </property>
       </widget>
      </item>
@@ -146,29 +107,6 @@
      </item>
     </layout>
    </widget>
-   <widget class="QProgressBar" name="progressBar">
-    <property name="geometry">
-     <rect>
-      <x>310</x>
-      <y>70</y>
-      <width>136</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="value">
-     <number>24</number>
-    </property>
-   </widget>
-  </widget>
-  <widget class="QMenuBar" name="menubar">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>1130</width>
-     <height>43</height>
-    </rect>
-   </property>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
