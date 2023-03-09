@@ -5,14 +5,14 @@ import imageio
 
 
 class VideoCreator:
-    def __init__(self, particles, boundaries, dt, simtime, fps=50, video_dir="C:/Users/Jaist/Desktop/ba_videos"):
+    def __init__(self, particles, boundaries, dt, simtime, video_name, fps=50, video_dir="C:/Users/Jaist/Desktop/ba_videos"):
         self.particles = particles
         self.boundaries = boundaries
         self.fps = fps
         self.video_dir = video_dir
         self.dt = dt
         self.simtime = simtime
-        self.video_name = f"3p_box_dt{dt}_fps{fps}.mp4"
+        self.video_name = video_name # f"{len(particles)}p_{len(boundaries)}b_{dt}_fps{fps}.mp4"
         self.time_steps = np.arange(0, self.simtime, self.dt)
 
 
@@ -21,11 +21,10 @@ class VideoCreator:
         pygame.init()
 
         # Set up the window dimensions
-        win_width = 1280
-        win_height = 720
+        win_width = 1328
+        win_height = 832
 
         # Set up the frame rate and clock
-        fps = 50
         clock = pygame.time.Clock()
 
         # Set up the colors
@@ -33,16 +32,16 @@ class VideoCreator:
 
         # Calculate the number of frames needed for the desired duration
         duration = self.time_steps[-1] - self.time_steps[0] + self.dt
-        num_video_frames = int(duration * fps)
+        num_video_frames = int(duration * self.fps)
         # print('n-frames needed ', num_video_frames)
         # Calculate the number of frames computed
         num_all_frames = len(self.time_steps)
 
         # Set up the video writer
-        video_dir = "C:/Users/Jaist/Desktop/ba_videos"
-        if not os.path.exists(video_dir):
-            os.makedirs(video_dir)
-        video_file = os.path.join(video_dir, self.video_name)
+        # video_dir = "C:/Users/Jaist/Desktop/ba_videos"
+        if not os.path.exists(self.video_dir):
+            os.makedirs(self.video_dir)
+        video_file = os.path.join(self.video_dir, self.video_name)
 
         # Delete the file if it already exists
         if os.path.isfile(video_file):
@@ -54,7 +53,7 @@ class VideoCreator:
         circle_radius = 10
         circle_color = BLACK
         # Set up the video writer with FFmpeg format
-        video_writer = imageio.get_writer(video_file, fps=fps, codec='libx264',
+        video_writer = imageio.get_writer(video_file, fps=self.fps, codec='libx264',
                                           ffmpeg_params=['-pix_fmt', 'yuv420p', '-vf', 'transpose=1,hflip',
                                                           '-preset', 'slow', '-probesize', '1000M',
                                                          '-analyzeduration', '1000M'])
@@ -105,13 +104,11 @@ class VideoCreator:
             video_writer.append_data(frame)
 
             # Wait for the next frame
-            clock.tick(fps)
+            clock.tick(self.fps)
 
         # Close the video writer
         video_writer.close()
 
         # Quit Pygame
         pygame.quit()
-
-
 

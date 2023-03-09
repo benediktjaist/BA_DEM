@@ -3,7 +3,6 @@ import numpy as np
 
 
 class Particle:
-    # all_particles = []
 
     def __init__(self, position, velocity, acceleration, force, rotation, rotation_vel, rotation_acc, torque, radius, elstiffnesn,
                  mass, pred_position, interpenetration_vel, pp_force=np.array([0, 0, 0]), pp_torque=np.array([0, 0, 0]),
@@ -22,7 +21,6 @@ class Particle:
         self.pred_position = pred_position
         self.interpenetration_vel = interpenetration_vel
         self.moment_of_inertia = 0.5 * self.mass * self.radius * self.radius
-        # Particle.all_particles.append(self)
         self.historic_positions = []
         self.historic_rotations = []
         self.pp_force = pp_force

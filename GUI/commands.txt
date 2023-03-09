@@ -6,3 +6,5 @@ pyuic6 SecondWindow.ui -o SecondWindow.py
 pyuic6 MainWindow_test.ui -o MainWindow_test.py
 im richtigen Directory und dann kommt der code raus
 UI files am besten im Pycharm directory speichern dann kannst direkt überschreiben
+
+C:\Users\Jaist\Documents\GitHub\BA_DEM\GUI\examples

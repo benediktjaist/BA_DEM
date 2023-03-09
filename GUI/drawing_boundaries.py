@@ -5,8 +5,8 @@ from Colours import get_colour_tuple
 
 def boundary_creator():
     # Set the width and height of the screen [width, height]
-    WIDTH = 1300
-    HEIGHT = 800
+    WIDTH = 1328
+    HEIGHT = 832
 
     # Set the size of the grid and the size of each grid square
     GRID_SIZE = 20
@@ -17,7 +17,7 @@ def boundary_creator():
     pygame.init()
 
     # Set the screen size
-    screen = pygame.display.set_mode((WIDTH, HEIGHT),pygame.SCALED ) # pygame.RESIZABLE
+    screen = pygame.display.set_mode((WIDTH, HEIGHT), pygame.SCALED) # pygame.RESIZABLE
     pygame.transform.scale(screen, (WIDTH, HEIGHT))
 
     # Set the window title
@@ -45,6 +45,7 @@ def boundary_creator():
     while not done:
         # Handle events
         for event in pygame.event.get():
+            pygame.display.update()
             if event.type == pygame.QUIT:
                 done = True
             elif event.type == pygame.VIDEORESIZE:

@@ -7,7 +7,7 @@ from matplotlib.offsetbox import AnchoredText
 import matplotlib.colors as mcolors
 from Particle import Particle
 from Boundary import Boundary
-import functions as fn
+# import functions as fn
 import test_cor as cor
 from typing import List
 import sympy as smp
@@ -330,4 +330,3 @@ class System:
                 print(particle.historic_positions[-1])
                 particle.energy.append(0.5*particle.mass*(np.linalg.norm(particle.velocity))**2
                                        + 0.5*particle.moment_of_inertia*(np.linalg.norm(particle.rotation_vel))**2)
-

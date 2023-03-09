@@ -1,9 +1,8 @@
 import numpy as np
-
 from Particle import Particle
 from Boundary import Boundary
-from dem_solver import PositionTracker, System
-from video_creator import VideoCreator
+from DEM_Solver import System
+from Video_Creator import VideoCreator
 
 position = np.array([600,200,0])
 velocity = np.array([50,-50,0])
@@ -42,4 +41,4 @@ vid_creator.animate()
 
 for particle in particle1:
     print('anf ', particle.energy[0])
-    print('end' , particle.energy[-1])
+    print('end', particle.energy[-1])

@@ -1,11 +1,10 @@
 import pygame
-import os
-from better_gui import particle_creator
-from Particle import Particle
+from GUI.prototypes.better_gui import particle_creator
 from dem_solver import System
 from Colours import get_colour_tuple
 import numpy as np
 from drawing_boundaries import boundary_creator
+
 
 WIDTH, HEIGHT = 900, 500
 WIN = pygame.display.set_mode((WIDTH, HEIGHT), pygame.RESIZABLE)
@@ -33,7 +32,7 @@ class Button:
 def draw_window():
     WIN.fill(get_colour_tuple('white'))
     # Load the image
-    tum_logo = pygame.image.load('TUM_Logo_blau_rgb_p.png')
+    tum_logo = pygame.image.load('../TUM_Logo_blau_rgb_p.png')
     resized_image = pygame.transform.scale(tum_logo, (200, 100))
 
     # Draw the image onto the screen called WIN
