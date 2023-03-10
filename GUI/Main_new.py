@@ -1,6 +1,7 @@
 import importlib
 import sys
 import os
+import importlib.util
 import numpy as np
 # main script von hier laufen lassen
 from PyQt6 import QtWidgets, QtGui
@@ -13,7 +14,12 @@ from drawing_boundaries import boundary_creator
 from DEM_Solver import System
 from Preview_Assembly import Assembly
 from Video_Creator import VideoCreator
-sys.path.append("C:/Users/Jaist/Documents/GitHub/BA_DEM/GUI/examples")
+
+
+def remove_trailing_zeros(number):
+    formatted_number = '{:.16g}'.format(number)
+    return float(formatted_number.rstrip('0').rstrip('.'))
+
 
 
 class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
@@ -23,13 +29,13 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.second_window = None
         self.particles = []
         self.boundaries = []
-        self.gravity = None
+        self.gravity = False
         self.cor = 1.0
         self.dt = 0.001
         self.simtime = 1
         self.mu = 0.5
         self.vid_dir = "C:/Users/Jaist/Desktop/ba_videos"
-        self.vid_name = "test"
+        self.vid_name = "test2.mp4"
         self.fps = 50
         self.secondWindow.clicked.connect(self.second_window_calling)
         # self.Particles.clicked.connect()
@@ -50,6 +56,35 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.import_button.clicked.connect(self.import_assembly)
         self.import_comboBox.addItems(self.get_file_names())
 
+    def import_assembly(self):
+        ort = self.import_path.text()
+        module_path = ort + "/" + str(self.import_comboBox.currentText())
+        # print(module_path)
+        module_name = str(self.import_comboBox.currentText())[:-3]
+        # print(module_name)
+        spec = importlib.util.spec_from_file_location(module_name, module_path)
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        # change attributes
+        for teil in module.teilchen:
+            self.particles.append(teil)
+        for grenze in module.grenzen:
+            self.boundaries.append(grenze)
+        self.gravity = module.gravitation
+        self.cor = module.kor
+        self.dt = module.tinkr
+        self.simtime = module.simzeit
+        self.mu = module.mue
+        self.message_import_finished()
+        # change displayed attributes
+        self.cor_SpinBox.setValue(module.kor)
+        self.dt_SpinBox.setValue(module.tinkr)
+        self.simtime_SpinBox.setValue(module.simzeit)
+        self.mu_SpinBox.setValue(module.mue)
+        if module.gravitation == True:
+            self.gravity_checkBox.setChecked(True)
+
+
 
     def get_file_names(self):
         # Set the directory containing the files
@@ -60,13 +95,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         file_names = [f for f in file_names if f.endswith('.py')]
         return file_names
 
-    def import_assembly(self):
-        print('hello')
-        print(self.import_comboBox.currentText())
-        # self.import_comboBox.currentText()
-        module = __import__("C:/Users/Jaist/Documents/GitHub/BA_DEM/GUI/examples/pp_central_elastic.py")
-        for teilchen in module.kugeln:
-            print(teilchen)
+
 
     def update_fps(self, value):
         self.fps = round(value)
@@ -96,7 +125,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     def update_gravity(self, state):
         self.gravity = state == 2
         print(self.gravity)
-
 
     def second_window_calling(self):
         self.second_window = SecondWindow(parent=self)
@@ -130,8 +158,19 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                         mu=self.mu, coeff_of_restitution=self.cor)
         system.run_simulation()
         self.message_sim_finished()
+        if len(self.boundaries) > 0:
+            what = 'p'+str(len(self.particles))+'b'+str(len(self.boundaries))
+        else:
+            what = 'p'+str(len(self.particles))
+        if self.cor == 1:
+            how = 'elastic'
+        else:
+            how = 'damp'
+        text = what+'_'+how+'_'+'dt'+str(remove_trailing_zeros(self.dt))+'.mp4'
+        self.vid_name_edit.setText(text)
 
     def create_video(self):
+        print(self.vid_name)
         video = VideoCreator(particles=self.particles, boundaries=self.boundaries, dt=self.dt, simtime=self.simtime,
                              video_dir=self.vid_dir, video_name=self.vid_name)
         video.animate()
@@ -157,6 +196,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         msg.setText("Import finished successfully")
         msg.setIcon(QMessageBox.Icon.Information)
         msg.exec()
+
+
 
 # this ensures that the game can only be called
 # here and not through an import

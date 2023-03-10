@@ -3,42 +3,60 @@ from Particle import Particle
 from Boundary import Boundary
 from DEM_Solver import System
 from Video_Creator import VideoCreator
+from Plot_Creator import PlotCreator
 
-position = np.array([600,200,0])
-velocity = np.array([50,-50,0])
-radius = 50
-elstiffnessn = 2000
-mass = 100
+position1 = np.array([600,600,0])
+velocity1 = np.array([0,0,0])
+radius1 = 50
+elstiffnessn1 = 2000
+mass1 = 100
 
-position2 = np.array([700,500,0])
-position2_obl = np.array([700,580,0])
-velocity2 = np.array([0,0,0])
+position2 = np.array([400,400,0])
+velocity2 = np.array([50,50,0])
 
-dt = 0.001
-simtime = 3
 
-particle1 = [Particle(position=position, velocity=velocity, acceleration=np.array([0, 0, 0]),
+teilchen = [Particle(position=position1, velocity=velocity1, acceleration=np.array([0, 0, 0]),
                             force=np.array([0, 0, 0]), rotation=np.array([0, 0, 0]),
                             rotation_vel=np.array([0, 0, 0]), rotation_acc=np.array([0, 0, 0]),
-                            torque=np.array([0, 0, 0]), radius=radius, elstiffnesn=elstiffnessn, mass=mass,
-                            pred_position=np.array([0, 0, 0]), interpenetration_vel=np.array([0, 0, 0])),]
+                            torque=np.array([0, 0, 0]), radius=radius1, elstiffnesn=elstiffnessn1, mass=mass1,
+                            pred_position=np.array([0, 0, 0]), interpenetration_vel=np.array([0, 0, 0])),
 
+            Particle(position=position2, velocity=velocity2, acceleration=np.array([0, 0, 0]),
+                     force=np.array([0, 0, 0]), rotation=np.array([0, 0, 0]),
+                     rotation_vel=np.array([0, 0, 0]), rotation_acc=np.array([0, 0, 0]),
+                     torque=np.array([0, 0, 0]), radius=radius1, elstiffnesn=elstiffnessn1, mass=mass1,
+                     pred_position=np.array([0, 0, 0]), interpenetration_vel=np.array([0, 0, 0]))
+            ]
 
+grenzen = []
 
-boundary0 = []
-boundary1 = [Boundary((700,100),(700,700))]
-boundary2 = [Boundary((700,100),(700,800)), Boundary((100,100),(700,100))]
+gravitation = False
 
-boundary4 = [Boundary((100,100),(800,100)),Boundary((100,100),(100,800)),
-             Boundary((100,800),(800,800)), Boundary((800,800),(800,100))]
+kor = 1
+tinkr = 0.01
+simzeit = 4
+mue = 1
 
-system = System(particles=particle1, boundaries=boundary2, dt=dt, simtime=simtime, mu=0.7,
-                coeff_of_restitution=1)
-system.run_simulation()
+# video = VideoCreator(particles=teilchen, boundaries=grenzen, dt=tinkr, simtime=simzeit,
+                     # video_name='test2')
+# video.animate()
 
-vid_creator = VideoCreator(particles=particle1, boundaries=boundary2, dt=dt, simtime=simtime)
-vid_creator.animate()
+solver = System(particles=teilchen, boundaries=grenzen, dt=tinkr, simtime=simzeit, mu=mue,
+                coeff_of_restitution=kor
+                )
+solver.run_simulation()
 
-for particle in particle1:
-    print('anf ', particle.energy[0])
-    print('end', particle.energy[-1])
+for particle in teilchen:
+    #print('ekin:', particle.energy_kin)
+    #print('erot:', particle.energy_kin)
+    #print('eel:', particle.energy_kin)
+    #print('edamp:', particle.energy_kin)
+    print(len(particle.energy_kin), len(particle.energy_el))
+    # print(particle.energy_el)
+
+for particle in teilchen:
+    print('anf ', particle.energy_kin[0])
+    print('end', particle.energy_kin[-1])
+
+plotter = PlotCreator(particles=teilchen, dt=tinkr, simtime=simzeit)
+plotter.plot_energy_kin()

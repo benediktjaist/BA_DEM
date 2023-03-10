@@ -224,68 +224,43 @@ class Assembly:
                         textbox_rect = textbox.get_rect()
                         textbox_rect.center = (n_particle.position[0], n_particle.position[1])
                         win.blit(textbox, textbox_rect)
+                    else:
+                        pass
 
                     # particle velocity
-                    start_point = n_particle.position
-                    end_point = n_particle.position + n_particle.velocity
-                    pygame.draw.aaline(win, col('red'), (start_point[0], start_point[1]), (end_point[0], end_point[1]), 5)
-                    # draw arrow
-                    if start_point[0] == end_point[0]:
-                        if start_point[1] < end_point[1]:
-                            alpha = np.pi / 2
+                    if np.linalg.norm(n_particle.velocity) != 0:
+                        start_point = n_particle.position
+                        end_point = n_particle.position + n_particle.velocity
+                        pygame.draw.aaline(win, col('red'), (start_point[0], start_point[1]), (end_point[0], end_point[1]), 5)
+                        # draw arrow
+                        if start_point[0] == end_point[0]:
+                            if start_point[1] < end_point[1]:
+                                alpha = np.pi / 2
+                            else:
+                                alpha = -np.pi / 2
                         else:
-                            alpha = -np.pi / 2
+                            alpha = np.arctan((end_point[1] - start_point[1]) / (end_point[0] - start_point[0]))
+
+                        if start_point[0] <= end_point[0]:
+
+                            pygame.draw.aaline(win, col('red'), (end_point[0], end_point[1]), (
+                                end_point[0] - 20 * np.cos(alpha + np.pi / 4),
+                                end_point[1] - 20 * np.sin(alpha + np.pi / 4)), 5)
+                            pygame.draw.aaline(win, col('red'), (end_point[0], end_point[1]), (
+                                end_point[0] - 20 * np.sin(alpha + np.pi / 4),
+                                end_point[1] + 20 * np.cos(alpha + np.pi / 4)), 5)
+                        else:
+
+                            pygame.draw.aaline(win, col('red'), (end_point[0], end_point[1]), (
+                                end_point[0] + 20 * np.cos(alpha + np.pi / 4),
+                                end_point[1] + 20 * np.sin(alpha + np.pi / 4)), 5)
+                            pygame.draw.aaline(win, col('red'), (end_point[0], end_point[1]), (
+                                end_point[0] + 20 * np.sin(alpha + np.pi / 4),
+                                end_point[1] - 20 * np.cos(alpha + np.pi / 4)), 5)
                     else:
-                        alpha = np.arctan((end_point[1] - start_point[1]) / (end_point[0] - start_point[0]))
-
-                    if start_point[0] <= end_point[0]:
-
-                        pygame.draw.aaline(win, col('red'), (end_point[0], end_point[1]), (
-                            end_point[0] - 20 * np.cos(alpha + np.pi / 4),
-                            end_point[1] - 20 * np.sin(alpha + np.pi / 4)), 5)
-                        pygame.draw.aaline(win, col('red'), (end_point[0], end_point[1]), (
-                            end_point[0] - 20 * np.sin(alpha + np.pi / 4),
-                            end_point[1] + 20 * np.cos(alpha + np.pi / 4)), 5)
-                    else:
-
-                        pygame.draw.aaline(win, col('red'), (end_point[0], end_point[1]), (
-                            end_point[0] + 20 * np.cos(alpha + np.pi / 4),
-                            end_point[1] + 20 * np.sin(alpha + np.pi / 4)), 5)
-                        pygame.draw.aaline(win, col('red'), (end_point[0], end_point[1]), (
-                            end_point[0] + 20 * np.sin(alpha + np.pi / 4),
-                            end_point[1] - 20 * np.cos(alpha + np.pi / 4)), 5)
+                        pass
 
             pygame.display.update()
 
         # Quit Pygame
         pygame.quit()
-
-'''
-position1 = np.array([600,200,0])
-velocity1 = np.array([50,-50,0])
-radius = 50
-elstiffnessn = 2000
-mass = 100
-
-position2 = np.array([700,500,0])
-position2_obl = np.array([700,580,0])
-velocity2 = np.array([100,67,0])
-
-assembly = Assembly([Particle(position=position1, velocity=velocity1, acceleration=np.array([0, 0, 0]),
-                            force=np.array([0, 0, 0]), rotation=np.array([0, 0, 0]),
-                            rotation_vel=np.array([0, 0, 0]), rotation_acc=np.array([0, 0, 0]),
-                            torque=np.array([0, 0, 0]), radius=radius, elstiffnesn=elstiffnessn, mass=mass,
-                            pred_position=np.array([0, 0, 0]), interpenetration_vel=np.array([0, 0, 0])),
-
-                     Particle(position=position2, velocity=velocity2, acceleration=np.array([0, 0, 0]),
-                              force=np.array([0, 0, 0]), rotation=np.array([0, 0, 0]),
-                              rotation_vel=np.array([0, 0, 0]), rotation_acc=np.array([0, 0, 0]),
-                              torque=np.array([0, 0, 0]), radius=radius, elstiffnesn=elstiffnessn, mass=mass,
-                              pred_position=np.array([0, 0, 0]), interpenetration_vel=np.array([0, 0, 0]))
-                     ], [Boundary((700,100),(700,800)), Boundary((100,100),(700,100))], gravity=True)
-
-
-assembly.show()
-assembly = Assembly(particles=None, boundaries=None, gravity=None)
-assembly.show()
-'''

@@ -34,13 +34,14 @@ class PositionTracker:
 
 
 class System:
-    def __init__(self, particles: List[Particle], boundaries: List[Boundary], dt: float, simtime: float, mu: float, coeff_of_restitution: float):
+    def __init__(self, particles: List[Particle], boundaries: List[Boundary], dt: float, simtime: float, mu: float, coeff_of_restitution: float, gravity = False):
         self.particles = particles
         self.boundaries = boundaries
         self.dt = dt
         self.simtime = simtime
         self.mu = mu
         self.coeff_of_restitution = coeff_of_restitution
+        self.gravity = gravity
         self.damp_coeff = self.__calculate_damping_coefficient()
         self.crit_dt = self.__calculate_critical_time_step()
         self.position_tracker = PositionTracker(self.particles, self.simtime, self.dt)
@@ -73,7 +74,12 @@ class System:
                 pred_rota = n_particle.rotation + self.dt * pred_rot_vel05
                 n_particle.rotation = pred_rota
                 n_particle.rotation_vel = pred_rot_vel05
-                print('loop predict posi')
+
+                # update ekin, erot, epot
+                n_particle.energy_kin.append(0.5 * n_particle.mass * (np.linalg.norm(n_particle.velocity)) ** 2)
+                n_particle.energy_rot.append(0.5 * n_particle.moment_of_inertia * (np.linalg.norm(n_particle.rotation_vel)) ** 2)
+                # n_particle.energy_pot.append(0)
+
 
             for index, pi in enumerate(self.particles):
                 if len(self.particles) == 1:
@@ -81,7 +87,7 @@ class System:
                     pi.rotation_acc = np.array(pi.torque) / pi.moment_of_inertia
                     pi.velocity = pi.velocity + 0.5 * self.dt * pi.acceleration
                     pi.rotation_vel = pi.rotation_vel + 0.5 * self.dt * pi.rotation_acc
-                    print('loop p = 1')
+
 
                 for pj in self.particles[index + 1:]:
                     cij = pi.position - pj.position
@@ -93,7 +99,6 @@ class System:
                     m_eq = (pi.mass * pj.mass) / (pi.mass + pj.mass)
                     radius_eq = (pi.radius * pj.radius) / (pi.radius + pj.radius)
                     k_t = elstiffnesn_eq * 0.8
-                    print('loop pi')
 
                     if norm_cij < pi.radius + pj.radius:
                         interpenetration = pi.radius + pj.radius - np.dot((pj.position - pi.position), normal_ij)
@@ -140,6 +145,17 @@ class System:
                         pi.pp_torque = np.array([0, 0, moment])
                         pj.pp_torque = pi.torque
 
+                        # energy
+                        pi.energy_el.append(0.5 * (0.5 * interpenetration ** 2 * elstiffnesn_eq))
+                        pi.energy_damp.append(
+                            0.5 * (0.5 * self.damp_coeff * np.linalg.norm(interpenetration_vel) * interpenetration))
+
+                        pj.energy_el.append(0.5 * (0.5 * interpenetration ** 2 * elstiffnesn_eq))
+                        pi.energy_damp.append(
+                            0.5 * (0.5 * self.damp_coeff * np.linalg.norm(interpenetration_vel) * interpenetration))
+
+
+
                     else:
                         interpenetration = 0
                         interpenetration_vel = 0
@@ -149,14 +165,24 @@ class System:
                         pi.pp_torque = np.array([0, 0, 0])
                         pj.pp_torque = np.array([0, 0, 0])
 
+                        pi.energy_el.append(0)
+                        pi.energy_damp.append(0)
+
+                        pj.energy_el.append(0)
+                        pj.energy_damp.append(0)
+
+                        # WARNING
+                        # multiple contact energy tracking is missing
+
             # contact with boundaries
             for pi in self.particles:
 
                 all_bf = []
                 all_bt = []
 
+                all_bp_energies = []
+
                 for boundary in self.boundaries:
-                    print('p-b loop')
                     # check if boundary can be written as linear equation
                     if boundary.start_point[0] == boundary.end_point[0]:
 
@@ -175,10 +201,8 @@ class System:
                             # compute the point of contact (poc)
                             y_mid = sum(y_intercepts) / 2
                             poc = np.array([boundary.start_point[0], y_mid, 0])
-                            print('numpy: ', poc)
 
                             normal_ib = (poc - pi.position) / np.linalg.norm(poc - pi.position)
-                            print(normal_ib)
                             elstiffnesn_eq = pi.elstiffnesn
                             m_eq = pi.mass
                             radius_eq = pi.radius
@@ -186,7 +210,6 @@ class System:
 
                             interpenetration = pi.radius - np.dot((poc - pi.position), normal_ib)
                             interpenetration_vel = -np.dot(pi.velocity, normal_ib)
-                            print('interpen', interpenetration)
                             r_ibc = poc - pi.position
 
                             # velocity at the contact point
@@ -200,7 +223,6 @@ class System:
                                 t_ib = v_ib_t / np.linalg.norm(v_ib_t)
                             else:
                                 t_ib = 0
-                            print(t_ib)
                             increment_of_t_displacement = np.linalg.norm(v_ib_t) * self.dt
 
                             max_friction_force = self.mu * np.dot(pi.force, normal_ib)
@@ -218,7 +240,6 @@ class System:
                             all_bt.append(np.array([0, 0, moment]))
 
                         else:
-                            print('they do not intersect1')
                             all_bf.append(np.array([0, 0, 0]))
                             all_bt.append(np.array([0, 0, 0]))
 
@@ -245,14 +266,6 @@ class System:
                             # compute point of contact (poc)
                             x_mid = sum(nullstellen) / 2
                             poc = np.array([x_mid, y3.evalf(subs={x: x_mid}), 0], dtype='float64')
-                            for i in range(len(poc)):
-                                print(poc[i])
-                                print(type(poc[i]))
-
-                            print(boundary.start_point, boundary.end_point)
-                            print(pi)
-
-                            print('sympy: ', poc)
 
                             normal_ib = (poc - pi.position) / np.linalg.norm(poc - pi.position)
                             # AttributeError: 'Float' object has no attribute 'sqrt'
@@ -295,7 +308,6 @@ class System:
                             moment = - f_t * np.linalg.norm(r_ibc)
                             all_bt.append(np.array([0, 0, moment]))
                         else:
-                            print("they do not intersect2")
                             all_bf.append(np.array([0, 0, 0]))
                             all_bt.append(np.array([0, 0, 0]))
 
@@ -306,21 +318,25 @@ class System:
         
                             interpenetration_max = (rel_vel / omega) * np.exp(-(psi / omega) * np.arctan(omega / psi))
                             '''
-                for i in all_bf:
-                    print(i)
-                for i in all_bt:
-                    print(i)
+
                 pi.pb_force = sum(all_bf)
-                print(pi.pb_force)
+
                 pi.pb_torque = sum(all_bt)
-                print(pi.pb_torque)
+
+
+                # spring + dashpot energy from all boundaries
+
+
+
             for particle in self.particles:
                 particle.force = particle.pp_force + particle.pb_force
                 particle.torque = particle.pp_torque + particle.pb_torque
-                print('ppf ',particle.pp_force)
-                print('pbf ', particle.pb_force)
-                print(particle.force)
-                particle.acceleration = np.array([0, 0, 0]) + np.array(particle.force) * (1 / particle.mass) # to change gravity
+
+                if self.gravity == True:
+                    gravity = np.array([0, 10, 0])
+                else:
+                    gravity = np.array([0, 0, 0])
+                particle.acceleration = gravity + np.array(particle.force) * (1 / particle.mass) # to change gravity
                 particle.rotation_acc = np.array(particle.torque) / particle.moment_of_inertia
                 particle.velocity = particle.velocity + 0.5 * self.dt * particle.acceleration
                 particle.rotation_vel = particle.rotation_vel + 0.5 * self.dt * particle.rotation_acc
@@ -328,5 +344,5 @@ class System:
                 particle.historic_positions.append(particle.position)
                 particle.historic_rotations.append(particle.rotation)
                 print(particle.historic_positions[-1])
-                particle.energy.append(0.5*particle.mass*(np.linalg.norm(particle.velocity))**2
-                                       + 0.5*particle.moment_of_inertia*(np.linalg.norm(particle.rotation_vel))**2)
+                # particle.energy.append(0.5*particle.mass*(np.linalg.norm(particle.velocity))**2
+                                       # + 0.5*particle.moment_of_inertia*(np.linalg.norm(particle.rotation_vel))**2)

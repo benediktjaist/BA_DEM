@@ -27,7 +27,11 @@ class Particle:
         self.pp_torque = pp_torque
         self.pb_force = pb_force
         self.pb_torque = pb_torque
-        self.energy = []
+        self.energy_kin = []
+        self.energy_rot = []
+        self.energy_pot = []
+        self.energy_el = []
+        self.energy_damp = []
 
     def __str__(self):
         return f"Position: {self.position}\nVelocity: {self.velocity}\nAcceleration: {self.acceleration}\n" \
@@ -35,3 +39,13 @@ class Particle:
                f"Rotation Acceleration: {self.rotation_acc}\nTorque: {self.torque}\nRadius: {self.radius}\n" \
                f"Elastic Stiffness: {self.elstiffnesn}\nMass: {self.mass}\n" \
                f"Predicted Position: {self.pred_position}\nInterpenetration Velocity: {self.interpenetration_vel}"
+
+
+teilchen = [[1,1,1], [2,2,2], [2,2,2]]
+time = [1,2,3]
+
+for t in range(len(time)):
+    summe = []
+    for teil in teilchen:
+        summe
+

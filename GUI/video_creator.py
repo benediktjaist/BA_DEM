@@ -12,7 +12,7 @@ class VideoCreator:
         self.video_dir = video_dir
         self.dt = dt
         self.simtime = simtime
-        self.video_name = video_name # f"{len(particles)}p_{len(boundaries)}b_{dt}_fps{fps}.mp4"
+        self.video_name = video_name # "aaa.mp4" # f"aa{len(particles)}p_{len(boundaries)}b_{dt}_fps{fps}.mp4"
         self.time_steps = np.arange(0, self.simtime, self.dt)
 
 
@@ -42,6 +42,10 @@ class VideoCreator:
         if not os.path.exists(self.video_dir):
             os.makedirs(self.video_dir)
         video_file = os.path.join(self.video_dir, self.video_name)
+        # video_file = os.path.normpath(os.path.join(self.video_dir, self.video_name))
+        #video_file = os.path.join(self.video_dir.rstrip('\\'), self.video_name)
+        #video_file = os.path.normpath(
+            #os.path.join(self.video_dir.replace('\\', '/'), self.video_name.replace('\\', '/')))
 
         # Delete the file if it already exists
         if os.path.isfile(video_file):

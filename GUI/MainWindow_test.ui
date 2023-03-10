@@ -94,36 +94,18 @@
       <height>23</height>
      </rect>
     </property>
-   </widget>
-   <widget class="QComboBox" name="import_comboBox">
-    <property name="geometry">
-     <rect>
-      <x>290</x>
-      <y>100</y>
-      <width>101</width>
-      <height>22</height>
-     </rect>
+    <property name="styleSheet">
+     <string notr="true">font: 8pt &quot;MS Shell Dlg 2&quot;; 
+color: rgb(0, 101, 189);
+background-color: white;</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="import_change_path">
-    <property name="geometry">
-     <rect>
-      <x>100</x>
-      <y>100</y>
-      <width>84</width>
-      <height>25</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Change Path</string>
-    </property>
-   </widget>
-   <widget class="QWidget" name="">
+   <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
       <x>60</x>
       <y>580</y>
-      <width>421</width>
+      <width>481</width>
       <height>102</height>
      </rect>
     </property>
@@ -153,44 +135,15 @@
       </widget>
      </item>
      <item row="0" column="1">
-      <widget class="QLineEdit" name="plot_dir_edit"/>
-     </item>
-    </layout>
-   </widget>
-   <widget class="QWidget" name="">
-    <property name="geometry">
-     <rect>
-      <x>60</x>
-      <y>40</y>
-      <width>531</width>
-      <height>54</height>
-     </rect>
-    </property>
-    <layout class="QGridLayout" name="importLayout">
-     <item row="1" column="0">
-      <widget class="QLabel" name="import_text">
+      <widget class="QLineEdit" name="plot_dir_edit">
        <property name="text">
-        <string>Absolute Path for file:</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="1">
-      <widget class="QLineEdit" name="import_path">
-       <property name="text">
-        <string>C:/Users/Jaist/Documents/GitHub/BA_DEM/GUI/examples</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="0" colspan="2">
-      <widget class="QPushButton" name="import_button">
-       <property name="text">
-        <string>Import Configuration</string>
+        <string>C:/Users/Jaist/Documents/GitHub/BA_DEM/GUI/examples/plots</string>
        </property>
       </widget>
      </item>
     </layout>
    </widget>
-   <widget class="QWidget" name="">
+   <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
       <x>60</x>
@@ -258,7 +211,7 @@
      <item row="1" column="1" colspan="4">
       <widget class="QLineEdit" name="vid_name_edit">
        <property name="text">
-        <string>test</string>
+        <string>test.mp4</string>
        </property>
       </widget>
      </item>
@@ -284,7 +237,7 @@
      </item>
     </layout>
    </widget>
-   <widget class="QWidget" name="">
+   <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
       <x>60</x>
@@ -402,7 +355,7 @@
      </item>
     </layout>
    </widget>
-   <widget class="QWidget" name="">
+   <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
       <x>60</x>
@@ -446,6 +399,49 @@
         <string>Preview Assembly</string>
        </property>
       </widget>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QWidget" name="">
+    <property name="geometry">
+     <rect>
+      <x>61</x>
+      <y>41</y>
+      <width>521</width>
+      <height>85</height>
+     </rect>
+    </property>
+    <layout class="QGridLayout" name="gridLayout_2">
+     <item row="1" column="0">
+      <widget class="QLabel" name="import_text">
+       <property name="text">
+        <string>Absolute Path for file:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1" colspan="2">
+      <widget class="QLineEdit" name="import_path">
+       <property name="text">
+        <string>C:/Users/Jaist/Documents/GitHub/BA_DEM/GUI/examples</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="0" colspan="3">
+      <widget class="QPushButton" name="import_button">
+       <property name="text">
+        <string>Import Configuration</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="0">
+      <widget class="QPushButton" name="import_change_path">
+       <property name="text">
+        <string>Change Path</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1" colspan="2">
+      <widget class="QComboBox" name="import_comboBox"/>
      </item>
     </layout>
    </widget>

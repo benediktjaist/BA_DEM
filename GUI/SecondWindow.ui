@@ -37,7 +37,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>500,500</string>
+     <string>400 , 400</string>
     </property>
    </widget>
    <widget class="QLineEdit" name="velocity">
@@ -50,36 +50,23 @@
      </rect>
     </property>
     <property name="text">
-     <string>50,50</string>
-    </property>
-   </widget>
-   <widget class="QSpinBox" name="n_Particles">
-    <property name="geometry">
-     <rect>
-      <x>160</x>
-      <y>30</y>
-      <width>56</width>
-      <height>34</height>
-     </rect>
-    </property>
-    <property name="minimum">
-     <number>1</number>
-    </property>
-    <property name="value">
-     <number>2</number>
+     <string>50,0</string>
     </property>
    </widget>
    <widget class="QLabel" name="n_Particles_lab">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="geometry">
      <rect>
       <x>20</x>
       <y>30</y>
-      <width>141</width>
+      <width>241</width>
       <height>29</height>
      </rect>
     </property>
     <property name="text">
-     <string>total number of Particles</string>
+     <string>total number of Particles in Assembly: </string>
     </property>
    </widget>
    <widget class="QLabel" name="pos_lab">
@@ -321,7 +308,6 @@ background-color: white;
     </property>
    </widget>
   </widget>
-  <widget class="QStatusBar" name="statusbar"/>
  </widget>
  <resources/>
  <connections/>
