@@ -9,7 +9,7 @@ from PyQt6.QtCore import QObject, pyqtSignal
 class VideoCreator(QObject):
     vid_iterationChanged = pyqtSignal(int)
     vid_total_iterationsChanged = pyqtSignal(int)
-    vid_remaining_timeChanged = pyqtSignal(float)
+    vid_remaining_timeChanged = pyqtSignal(str)
 
     def __init__(self, particles, boundaries, dt, simtime, video_name, fps=50, video_dir="C:/Users/Jaist/Desktop/ba_videos"):
         super().__init__()
@@ -123,9 +123,15 @@ class VideoCreator(QObject):
 
             # Progress Tracker
             self.elapsed_time = time.time() - start_time
-            self.remaining_time = (num_video_frames - iteration - 1) * self.elapsed_time / (iteration + 1)
+            remaining_time = (num_video_frames - iteration - 1) * self.elapsed_time / (iteration + 1)
+            hours = float(remaining_time // 3600)
+            minutes = float((remaining_time % 3600) // 60)
+            seconds = float(remaining_time % 60)
+            print(f"{hours:02.0f}:{minutes:02.0f}:{seconds:02.0f}")
+            self.remaining_time = f"{hours:02.0f}:{minutes:02.0f}:{seconds:02.0f}"
             self.vid_iterationChanged.emit(iteration + 1)
             self.vid_total_iterationsChanged.emit(num_video_frames)
+            print('875')
             self.vid_remaining_timeChanged.emit(self.remaining_time)
 
         # Close the video writer
@@ -133,21 +139,3 @@ class VideoCreator(QObject):
 
         # Quit Pygame
         pygame.quit()
-
-
-'''
-print('zeit', f"{video.remaining_time[0]:02d}:{video.remaining_time[1]:02d}:{video.remaining_time[2]:02d}")
-
-# Conversion to hh:mm:ss
-            elapsed_seconds = int(self.elapsed_time)
-            remaining_seconds = int(remaining_time_secs)
-            total_seconds = elapsed_seconds + remaining_seconds
-            hours = total_seconds // 3600
-            minutes = (total_seconds % 3600) // 60
-            seconds = total_seconds % 60
-            print('done')
-            
-            
-            self.remaining_time = [hours, minutes, seconds]
-
-'''

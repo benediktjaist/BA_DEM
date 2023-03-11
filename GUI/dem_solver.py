@@ -19,7 +19,7 @@ from PyQt6.QtCore import QObject, pyqtSignal
 class System(QObject):
     iterationChanged = pyqtSignal(int)
     total_iterationsChanged = pyqtSignal(int)
-    remaining_timeChanged = pyqtSignal(float)
+    remaining_timeChanged = pyqtSignal(str)
 
 
     def __init__(self, particles: List[Particle], boundaries: List[Boundary], dt: float, simtime: float, mu: float, coeff_of_restitution: float, gravity = False):
@@ -339,9 +339,13 @@ class System(QObject):
 
             # Progress Tracker
             self.elapsed_time = time.time() - start_time
-            self.remaining_time = (self.total_iterations - iteration - 1) * self.elapsed_time / (iteration + 1)
-            print(
-                f"Iteration: {iteration + 1}/{self.total_iterations}. Elapsed time: {self.elapsed_time:.10f}s. Remaining time: {self.remaining_time:.10f}s")
+            remaining_time = (self.total_iterations - iteration - 1) * self.elapsed_time / (iteration + 1)
+            hours = float(remaining_time // 3600)
+            minutes = float((remaining_time % 3600) // 60)
+            seconds = float(remaining_time % 60)
+            print(f"{hours:02.0f}:{minutes:02.0f}:{seconds:02.0f}")
+            self.remaining_time = f"{hours:02.0f}:{minutes:02.0f}:{seconds:02.0f}"
+            print('4567')
             self.iterationChanged.emit(iteration + 1)
             self.total_iterationsChanged.emit(self.total_iterations)
             self.remaining_timeChanged.emit(self.remaining_time)

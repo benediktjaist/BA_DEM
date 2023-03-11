@@ -39,7 +39,7 @@ class Ui_MainWindow(object):
         self.sim_dur_lcdNumber.setStyleSheet("font: 8pt \"MS Shell Dlg 2\"; \n"
 "color: rgb(0, 101, 189);\n"
 "background-color: white;")
-        self.sim_dur_lcdNumber.setDigitCount(10)
+        self.sim_dur_lcdNumber.setDigitCount(8)
         self.sim_dur_lcdNumber.setObjectName("sim_dur_lcdNumber")
         self.layoutWidget = QtWidgets.QWidget(parent=self.centralwidget)
         self.layoutWidget.setGeometry(QtCore.QRect(60, 580, 481, 102))
