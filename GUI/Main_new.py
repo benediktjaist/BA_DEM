@@ -56,7 +56,11 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.import_button.clicked.connect(self.import_assembly)
         self.import_comboBox.addItems(self.get_file_names())
 
+
     def import_assembly(self):
+        # Deleting particles and boundaries from a previous import
+        self.particles = []
+        self.boundaries = []
         ort = self.import_path.text()
         module_path = ort + "/" + str(self.import_comboBox.currentText())
         # print(module_path)
@@ -155,7 +159,13 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
     def run_simulation(self):
         system = System(particles=self.particles, boundaries=self.boundaries, dt=self.dt, simtime=self.simtime,
-                        mu=self.mu, coeff_of_restitution=self.cor)
+                        mu=self.mu, coeff_of_restitution=self.cor, gravity=self.gravity)
+        # Progress Tracker
+        system.iterationChanged.connect(self.sim_progressBar.setValue)
+        system.total_iterationsChanged.connect(self.sim_progressBar.setMaximum)
+        system.remaining_timeChanged.connect(self.sim_dur_lcdNumber.display)
+        self.sim_progressBar.setMaximum(system.total_iterations)
+
         system.run_simulation()
         self.message_sim_finished()
         if len(self.boundaries) > 0:
@@ -173,6 +183,11 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         print(self.vid_name)
         video = VideoCreator(particles=self.particles, boundaries=self.boundaries, dt=self.dt, simtime=self.simtime,
                              video_dir=self.vid_dir, video_name=self.vid_name)
+        # Progress Tracker
+        video.vid_iterationChanged.connect(self.vid_progressBar.setValue)
+        video.vid_total_iterationsChanged.connect(self.vid_progressBar.setMaximum)
+        video.vid_remaining_timeChanged.connect(self.vid_dur_lcdNumber.display)
+        self.sim_progressBar.setMaximum(video.total_iterations)
         video.animate()
         self.message_video_finished()
 

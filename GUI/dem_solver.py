@@ -11,30 +11,19 @@ from Boundary import Boundary
 import test_cor as cor
 from typing import List
 import sympy as smp
+import time
+from PyQt6.QtCore import QObject, pyqtSignal
 
 
-class PositionTracker:
-    # particle_position_tracker is ip1 list of lists
-    # with the first index corresponding to time and the second index corresponding to particle id
-    def __init__(self, particles: List[Particle], simtime: float, dt: float):
-        self.particles = particles
-        self.simtime = simtime
-        self.dt = dt
-        self.positions = [[] for _ in range(int(self.simtime / self.dt))]
-        self.rotations = [[] for _ in range(int(self.simtime / self.dt))]
-        for i in range(len(self.positions)):
-            for particle in self.particles:
-                self.positions[i].append([])
-                self.rotations[i].append([])
 
-    def update(self, t: int):
-        for i, particle in enumerate(self.particles):
-            self.positions[t][i].append(particle.position)
-            self.rotations[t][i].append(particle.rotation)
+class System(QObject):
+    iterationChanged = pyqtSignal(int)
+    total_iterationsChanged = pyqtSignal(int)
+    remaining_timeChanged = pyqtSignal(float)
 
 
-class System:
     def __init__(self, particles: List[Particle], boundaries: List[Boundary], dt: float, simtime: float, mu: float, coeff_of_restitution: float, gravity = False):
+        super().__init__()
         self.particles = particles
         self.boundaries = boundaries
         self.dt = dt
@@ -44,7 +33,9 @@ class System:
         self.gravity = gravity
         self.damp_coeff = self.__calculate_damping_coefficient()
         self.crit_dt = self.__calculate_critical_time_step()
-        self.position_tracker = PositionTracker(self.particles, self.simtime, self.dt)
+        self.total_iterations = int(simtime/dt)
+        self.elapsed_time = 0
+        self.remaining_time = 0
 
         if dt > self.crit_dt:
             print("WARNING: dt > crit_dt. Setting dt to", np.round(self.crit_dt, 4))
@@ -59,11 +50,9 @@ class System:
             crit_steps.append(0.3 * 2 * np.sqrt(particle.mass / particle.elstiffnesn))
         return min(crit_steps)
 
-    def get_positions(self):
-        return self.position_tracker.positions
-
     def run_simulation(self):
-        for time_step_count, t in enumerate(np.arange(0, self.simtime, self.dt)):
+        start_time = time.time()
+        for iteration, t in enumerate(np.arange(0, self.simtime, self.dt)):
             for n_particle in self.particles:
                 pred_vel05 = n_particle.velocity + 0.5 * self.dt * n_particle.acceleration
                 pred_posi = n_particle.position + self.dt * pred_vel05
@@ -346,3 +335,13 @@ class System:
                 print(particle.historic_positions[-1])
                 # particle.energy.append(0.5*particle.mass*(np.linalg.norm(particle.velocity))**2
                                        # + 0.5*particle.moment_of_inertia*(np.linalg.norm(particle.rotation_vel))**2)
+
+
+            # Progress Tracker
+            self.elapsed_time = time.time() - start_time
+            self.remaining_time = (self.total_iterations - iteration - 1) * self.elapsed_time / (iteration + 1)
+            print(
+                f"Iteration: {iteration + 1}/{self.total_iterations}. Elapsed time: {self.elapsed_time:.10f}s. Remaining time: {self.remaining_time:.10f}s")
+            self.iterationChanged.emit(iteration + 1)
+            self.total_iterationsChanged.emit(self.total_iterations)
+            self.remaining_timeChanged.emit(self.remaining_time)

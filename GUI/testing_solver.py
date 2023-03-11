@@ -46,6 +46,7 @@ solver = System(particles=teilchen, boundaries=grenzen, dt=tinkr, simtime=simzei
                 )
 solver.run_simulation()
 
+'''
 for particle in teilchen:
     #print('ekin:', particle.energy_kin)
     #print('erot:', particle.energy_kin)
@@ -60,3 +61,4 @@ for particle in teilchen:
 
 plotter = PlotCreator(particles=teilchen, dt=tinkr, simtime=simzeit)
 plotter.plot_energy_kin()
+'''

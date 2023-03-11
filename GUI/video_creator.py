@@ -2,10 +2,17 @@ import pygame
 import os
 import numpy as np
 import imageio
+import time
+from PyQt6.QtCore import QObject, pyqtSignal
 
 
-class VideoCreator:
+class VideoCreator(QObject):
+    vid_iterationChanged = pyqtSignal(int)
+    vid_total_iterationsChanged = pyqtSignal(int)
+    vid_remaining_timeChanged = pyqtSignal(float)
+
     def __init__(self, particles, boundaries, dt, simtime, video_name, fps=50, video_dir="C:/Users/Jaist/Desktop/ba_videos"):
+        super().__init__()
         self.particles = particles
         self.boundaries = boundaries
         self.fps = fps
@@ -14,9 +21,13 @@ class VideoCreator:
         self.simtime = simtime
         self.video_name = video_name # "aaa.mp4" # f"aa{len(particles)}p_{len(boundaries)}b_{dt}_fps{fps}.mp4"
         self.time_steps = np.arange(0, self.simtime, self.dt)
+        self.total_iterations = int(simtime/dt)
+        self.elapsed_time = 0
+        self.remaining_time = 0
 
 
     def animate(self):
+        start_time = time.time()
         # Initialize Pygame
         pygame.init()
 
@@ -79,7 +90,7 @@ class VideoCreator:
             # print(particle.historic_positions)
             # print(len(particle.historic_positions))
 
-        for t in range(len(video_frame_indices)):
+        for iteration, t in enumerate(range(len(video_frame_indices))):
 
             win.fill((255, 255, 255))
 
@@ -110,9 +121,33 @@ class VideoCreator:
             # Wait for the next frame
             clock.tick(self.fps)
 
+            # Progress Tracker
+            self.elapsed_time = time.time() - start_time
+            self.remaining_time = (num_video_frames - iteration - 1) * self.elapsed_time / (iteration + 1)
+            self.vid_iterationChanged.emit(iteration + 1)
+            self.vid_total_iterationsChanged.emit(num_video_frames)
+            self.vid_remaining_timeChanged.emit(self.remaining_time)
+
         # Close the video writer
         video_writer.close()
 
         # Quit Pygame
         pygame.quit()
 
+
+'''
+print('zeit', f"{video.remaining_time[0]:02d}:{video.remaining_time[1]:02d}:{video.remaining_time[2]:02d}")
+
+# Conversion to hh:mm:ss
+            elapsed_seconds = int(self.elapsed_time)
+            remaining_seconds = int(remaining_time_secs)
+            total_seconds = elapsed_seconds + remaining_seconds
+            hours = total_seconds // 3600
+            minutes = (total_seconds % 3600) // 60
+            seconds = total_seconds % 60
+            print('done')
+            
+            
+            self.remaining_time = [hours, minutes, seconds]
+
+'''

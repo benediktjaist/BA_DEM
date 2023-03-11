@@ -44,8 +44,13 @@ class Particle:
 teilchen = [[1,1,1], [2,2,2], [2,2,2]]
 time = [1,2,3]
 
-for t in range(len(time)):
-    summe = []
-    for teil in teilchen:
-        summe
+simtime = 10
+dt = 1
+for t in np.arange(0, simtime, dt):
+    for i in range(0, 10):
+        pass
+    for i in range(0,10):
+        pass
+
+
 
