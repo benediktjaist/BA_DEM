@@ -10,40 +10,44 @@ contact models vary in complexity and include different physical phenomena such 
 Popular contact models are the LS+D (Linear Spring Dashpot Model) and HM+D (Hertz Mindlin Spring Dashpot Model). 
 
 As part of a bachelor's thesis, this python simulation tool was developed. This calculation tool can be operated 
-via a GUI. The core of the simulation programme is the DEM_Solver. A simple DEM algorithm is implemented here. 
+via a graphical user interface (GUI). The core of the simulation programme is the DEM_Solver. A simple DEM algorithm is implemented here. 
 The central features of this implementation are the explicit time integration with the VV algorithm and a 
 linear spring dashpot model that models the interactions of the particles. The programme also supports the interaction 
 of particles with rigid body boundaries. 
 
-***
+---
 
 <div style="display:flex;justify-content:center;align-items:center;">
   <div style="flex:1;padding-right:20px;">
-    <img src="/BA_DEM/images/animation_screenshot.png" alt="Image 1" style="width:100%;">
+    <img src="/images/animation_screenshot.png" alt="Image 1" style="width:100%;">
     <p align="center">Figure 1 shows what the animations look like with pygame</p>
   </div>
   <div style="flex:1;padding-left:20px;">
-    <img src="/BA_DEM/images/gui_screenshot.png" alt="Image 2" style="width:100%;">
+    <img src="images/gui_screenshot.png" alt="Image 2" style="width:100%;">
     <p align="center">Figure 2 presents the GUI of the programme</p>
   </div>
 </div>
 
-***
+---
 
 
 
 ## Installation
 To use the simulation software, the entire repository "BA_DEM" must be downloaded. It must also be ensured that a 
-Python 3 version is installed on the device with the Numpy, Sympy and PyQt packages used. 
+Python 3 version is installed on the device with the [Numpy](https://numpy.org/), [Sympy](https://www.sympy.org/en/index.html), [PyQt](https://doc.qt.io/qtforpython/), [Imageio](https://imageio.readthedocs.io/en/stable/) and [Pygame](https://www.pygame.org/news) packages, which are necessary to run the DEM Tool. 
 
 For the installation of Python, [Anaconda](https://www.anaconda.com/) is recommended. Anaconda is an open source distribution for Python 
 that provides a comprehensive collection of libraries and tools. Visit their website for detailed information. 
 
-PyQt, NumPy and SymPy are among the standard packages included in the Anaconda distribution.
+PyQt, NumPy, SymPy and Imageio are among the standard packages included in the Anaconda distribution.
 Otherwise, packages can be updated or installed with the [anaconda navigator](https://docs.anaconda.com/navigator/index.html) 
 if a graphical user interface is preferred or [conda](https://conda.io/projects/conda/en/latest/user-guide/getting-started.html) 
-as backend solution which can be used via anaconda prompt. 
+as command-line interface (CLI) which can be used via Anaconda Prompt. 
 
+The only package, which is not provided by default in the anaconda environment is pygame. This can be installed via Anaconda Prompt as follows:
+```bash
+conda install -c cogsci pygame
+```
 
 ## Usage
 ### Starting the Program
