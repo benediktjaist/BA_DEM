@@ -19,12 +19,12 @@ of particles with rigid body boundaries.
 
 <div style="display:flex;justify-content:center;align-items:center;">
   <div style="flex:1;padding-right:5px;">
-    <img src="/images/animation_screenshot.png" alt="Image 1" style="width:50%;">
-    <p align="center">Figure 1 shows what the animations look like with pygame</p>
+    <img src="/images/animation_screenshot.png" alt="Image 1" style="width:40%;">
+    <p align="center">Animations with Pygame</p>
   </div>
   <div style="flex:1;padding-left:5px;">
-    <img src="images/gui_screenshot.png" alt="Image 2" style="width:50%;">
-    <p align="center">Figure 2 presents the GUI of the programme</p>
+    <img src="images/gui_screenshot.png" alt="Image 2" style="width:40%;">
+    <p align="center">GUI of the Simulation Tool</p>
   </div>
 </div>
 
