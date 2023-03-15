@@ -26,6 +26,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     def __init__(self, *args, obj=None, **kwargs):
         super(MainWindow, self).__init__(*args, **kwargs)
         self.setupUi(self)
+        self.showMaximized()
         self.second_window = None
         self.particles = []
         self.boundaries = []
@@ -55,6 +56,9 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.Video.clicked.connect(self.create_video)
         self.import_button.clicked.connect(self.import_assembly)
         self.import_comboBox.addItems(self.get_file_names())
+        self.import_change_path.clicked.connect(self.import_comboBox.clear)
+        self.import_change_path.clicked.connect(lambda: self.import_comboBox.addItems(self.get_file_names()))
+
 
 
     def import_assembly(self):
@@ -85,8 +89,10 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.dt_SpinBox.setValue(module.tinkr)
         self.simtime_SpinBox.setValue(module.simzeit)
         self.mu_SpinBox.setValue(module.mue)
-        if module.gravitation == True:
+        if self.gravity == True:
             self.gravity_checkBox.setChecked(True)
+        else:
+            self.gravity_checkBox.setChecked(False)
 
 
 
@@ -143,12 +149,11 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
     def delete_particles(self):
         self.particles = []
-        print(self.particles)
+        self.message_deleted_particles()
 
     def create_boundaries(self):
         self.boundaries = boundary_creator()
-        print(self.boundaries)
-        print(len(self.boundaries))
+        self.message_deleted_boundaries()
 
     def delete_boundaries(self):
         self.boundaries = []
@@ -209,6 +214,20 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         msg = QMessageBox()
         msg.setWindowTitle("Assembly Import")
         msg.setText("Import finished successfully")
+        msg.setIcon(QMessageBox.Icon.Information)
+        msg.exec()
+
+    def message_deleted_particles(self):
+        msg = QMessageBox()
+        msg.setWindowTitle("Deleting Particles")
+        msg.setText("deleting the particles was successful")
+        msg.setIcon(QMessageBox.Icon.Information)
+        msg.exec()
+
+    def message_deleted_boundaries(self):
+        msg = QMessageBox()
+        msg.setWindowTitle("Deleting Boundaries")
+        msg.setText("deleting the boundaries was successful")
         msg.setIcon(QMessageBox.Icon.Information)
         msg.exec()
 

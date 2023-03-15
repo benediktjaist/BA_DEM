@@ -10,6 +10,11 @@
     <height>600</height>
    </rect>
   </property>
+  <property name="font">
+   <font>
+    <family>Arial</family>
+   </font>
+  </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
@@ -51,22 +56,6 @@
     </property>
     <property name="text">
      <string>50,0</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="n_Particles_lab">
-    <property name="enabled">
-     <bool>false</bool>
-    </property>
-    <property name="geometry">
-     <rect>
-      <x>20</x>
-      <y>30</y>
-      <width>241</width>
-      <height>29</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>total number of Particles in Assembly: </string>
     </property>
    </widget>
    <widget class="QLabel" name="pos_lab">
