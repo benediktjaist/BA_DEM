@@ -1,7 +1,6 @@
 # BA_DEM
 
 # The DEM in two Dimensions - A basic Python Tool
-___
 The Discrete Element Method (DEM) is a numerical method that describes a system consisting of individual particles 
 tracking the movement and interaction of the particles over time. One of its key features is the explicit 
 time integration, which makes it fast and efficient. In the context of DEM, this algorithm is often called the 
@@ -16,10 +15,24 @@ The central features of this implementation are the explicit time integration wi
 linear spring dashpot model that models the interactions of the particles. The programme also supports the interaction 
 of particles with rigid body boundaries. 
 
+***
+
+<div style="display:flex;justify-content:center;align-items:center;">
+  <div style="flex:1;padding-right:20px;">
+    <img src="/BA_DEM/images/animation_screenshot.png" alt="Image 1" style="width:100%;">
+    <p align="center">Figure 1 shows what the animations look like with pygame</p>
+  </div>
+  <div style="flex:1;padding-left:20px;">
+    <img src="/BA_DEM/images/gui_screenshot.png" alt="Image 2" style="width:100%;">
+    <p align="center">Figure 2 presents the GUI of the programme</p>
+  </div>
+</div>
+
+***
+
 
 
 ## Installation
-___
 To use the simulation software, the entire repository "BA_DEM" must be downloaded. It must also be ensured that a 
 Python 3 version is installed on the device with the Numpy, Sympy and PyQt packages used. 
 
@@ -33,7 +46,6 @@ as backend solution which can be used via anaconda prompt.
 
 
 ## Usage
-___
 ### Starting the Program
 To start the calculation tool, the Python script "Main" must be executed in a Python environment. 
 ### Creating an Assembly
@@ -55,7 +67,6 @@ also take a while, the remaining rendering time and the progress are displayed t
 In order to check the plausibility of the calculation or to view details of the system behaviour, the user has the possibility 
 to plot the energies of the individual particles and the entire system over time.
 ## Contributing
-___
 Pull requests are welcome. For major changes, please open an issue first
 to discuss what you would like to change.
 
@@ -64,7 +75,6 @@ If you have suggestions for improvement or need further information feel free to
 [benedikt.jaist@gmail.com](mailto:benedikt.jaist@gmail.com?subject=DEM%20Simulation%20Tool).
 
 ## License
-___
 This project is published here on GitHub under the [BSD 4-Clause](https://spdx.org/licenses/BSD-4-Clause.html) licence. 
 
 Please have a look at the "LICENCE.md" file. 
