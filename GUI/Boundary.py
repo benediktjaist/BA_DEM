@@ -1,11 +1,12 @@
 import sympy as smp
-
+import numpy as np
 
 class Boundary:
 
     def __init__(self, start_point, end_point):
-        self.start_point = start_point
-        self.end_point = end_point
+        self.start_point = np.array([start_point[0], start_point[1], 0])
+        self.end_point = np.array([end_point[0], end_point[1], 0])
+        self.id = None
 
     def calc_gradient(self):
         return (self.end_point[1] - self.start_point[1]) / (self.end_point[0] - self.start_point[0])

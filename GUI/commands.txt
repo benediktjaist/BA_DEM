@@ -8,3 +8,7 @@ im richtigen Directory und dann kommt der code raus
 UI files am besten im Pycharm directory speichern dann kannst direkt überschreiben
 
 C:\Users\Jaist\Documents\GitHub\BA_DEM\GUI\examples
+
+
+conda activate <myenv>
+where python

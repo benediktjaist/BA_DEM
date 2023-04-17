@@ -127,11 +127,11 @@ class VideoCreator(QObject):
             hours = float(remaining_time // 3600)
             minutes = float((remaining_time % 3600) // 60)
             seconds = float(remaining_time % 60)
-            print(f"{hours:02.0f}:{minutes:02.0f}:{seconds:02.0f}")
+            #print(f"{hours:02.0f}:{minutes:02.0f}:{seconds:02.0f}")
             self.remaining_time = f"{hours:02.0f}:{minutes:02.0f}:{seconds:02.0f}"
             self.vid_iterationChanged.emit(iteration + 1)
             self.vid_total_iterationsChanged.emit(num_video_frames)
-            print('875')
+            #print('875')
             self.vid_remaining_timeChanged.emit(self.remaining_time)
 
         # Close the video writer

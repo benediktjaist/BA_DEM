@@ -131,13 +131,13 @@ class Assembly:
             else:
                 # Draw the boundaries
                 for n_boundary in self.boundaries:
-                    pygame.draw.line(win, col('black'), n_boundary.start_point, n_boundary.end_point, 5)
+                    pygame.draw.line(win, col('black'), (n_boundary.start_point[0], n_boundary.start_point[1]), (n_boundary.end_point[0], n_boundary.end_point[1]), 5)
                     if self.coords:
                         # Set up the font
                         font = pygame.font.SysFont("Arial", 14)
                         # Add the text to the textbox surface
-                        text1 = font.render("start point: " + str(n_boundary.start_point), True, col('blue'))
-                        text2 = font.render("end point: " + str(n_boundary.end_point), True, col('blue'))
+                        text1 = font.render("start point: " + str((n_boundary.start_point[0], n_boundary.start_point[1])), True, col('blue'))
+                        text2 = font.render("end point: " + str((n_boundary.end_point[0], n_boundary.end_point[1])), True, col('blue'))
                         textbox_width = max(text1.get_width(), text2.get_width()) + 20
                         textbox_height = text1.get_height() + text2.get_height() + 10
                         textbox = pygame.Surface((textbox_width, textbox_height))

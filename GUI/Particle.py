@@ -5,8 +5,7 @@ import numpy as np
 class Particle:
 
     def __init__(self, position, velocity, acceleration, force, rotation, rotation_vel, rotation_acc, torque, radius, elstiffnesn,
-                 mass, pred_position, interpenetration_vel, pp_force=np.array([0, 0, 0]), pp_torque=np.array([0, 0, 0]),
-                 pb_force=np.array([0, 0, 0]), pb_torque=np.array([0, 0, 0])):
+                 mass, pred_position, interpenetration_vel, pp_torque=np.array([0, 0, 0]), pb_torque=np.array([0, 0, 0])):
         self.position = position
         self.velocity = velocity
         self.acceleration = acceleration
@@ -23,15 +22,16 @@ class Particle:
         self.moment_of_inertia = 0.5 * self.mass * self.radius * self.radius
         self.historic_positions = []
         self.historic_rotations = []
-        self.pp_force = pp_force
+        self.pp_force = []
         self.pp_torque = pp_torque
-        self.pb_force = pb_force
+        self.pb_force = []
         self.pb_torque = pb_torque
         self.energy_kin = []
         self.energy_rot = []
         self.energy_pot = []
         self.energy_el = []
         self.energy_damp = []
+        self.id = None
 
     def __str__(self):
         return f"Position: {self.position}\nVelocity: {self.velocity}\nAcceleration: {self.acceleration}\n" \

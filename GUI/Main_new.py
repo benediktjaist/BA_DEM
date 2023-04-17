@@ -2,6 +2,7 @@ import importlib
 import sys
 import os
 import importlib.util
+import traceback
 import numpy as np
 # main script von hier laufen lassen
 from PyQt6 import QtWidgets, QtGui
@@ -16,10 +17,28 @@ from Preview_Assembly import Assembly
 from Video_Creator import VideoCreator
 
 
+def normalize_path(path):
+    return path.replace("\\", "/")
+
+
 def remove_trailing_zeros(number):
     formatted_number = '{:.16g}'.format(number)
     return float(formatted_number.rstrip('0').rstrip('.'))
 
+
+sys._excepthook = sys.excepthook
+
+
+def exception_hook(exctype, value, traceback):
+    #print(exctype, value, traceback)
+    #sys.exit()
+    tb = ''.join(traceback.format_tb(traceback))
+    message = f'{exctype.__name__}: {value}\n{tb}'
+    print(message)
+    sys.exit()
+
+
+sys.excepthook = exception_hook
 
 
 class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
@@ -59,8 +78,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.import_change_path.clicked.connect(self.import_comboBox.clear)
         self.import_change_path.clicked.connect(lambda: self.import_comboBox.addItems(self.get_file_names()))
 
-
-
     def import_assembly(self):
         # Deleting particles and boundaries from a previous import
         self.particles = []
@@ -74,10 +91,12 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(module)
         # change attributes
-        for teil in module.teilchen:
+        for id, teil in enumerate(module.teilchen):
             self.particles.append(teil)
-        for grenze in module.grenzen:
+            teil.id = id
+        for id, grenze in enumerate(module.grenzen):
             self.boundaries.append(grenze)
+            grenze.id = id
         self.gravity = module.gravitation
         self.cor = module.kor
         self.dt = module.tinkr
@@ -143,6 +162,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
     def receive_particles(self, particle):
         self.particles = particle
+        for id, particlee in enumerate(self.particles):
+            particlee.id = id
         print(self.particles)
         print(self.particles[0])
         print(type(self.particles[0].position))
@@ -153,10 +174,14 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
     def create_boundaries(self):
         self.boundaries = boundary_creator()
-        self.message_deleted_boundaries()
+        for id, boundary in enumerate(self.boundaries):
+            boundary.id = id
+            #boundary.id = f'B{id + 1}'
+        self.message_created_boundaries()
 
     def delete_boundaries(self):
         self.boundaries = []
+        self.message_deleted_boundaries()
 
     def show_assembly(self):
         assembly = Assembly(particles=self.particles, boundaries=self.boundaries, gravity=self.gravity)
@@ -231,6 +256,12 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         msg.setIcon(QMessageBox.Icon.Information)
         msg.exec()
 
+    def message_created_boundaries(self):
+        msg = QMessageBox()
+        msg.setWindowTitle("Creating Boundaries")
+        msg.setText("creating the boundaries was successful")
+        msg.setIcon(QMessageBox.Icon.Information)
+        msg.exec()
 
 
 # this ensures that the game can only be called
