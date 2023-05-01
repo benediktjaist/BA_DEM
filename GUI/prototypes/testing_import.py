@@ -9,7 +9,7 @@ print(x.kugeln)
 import importlib.util
 import sys
 
-module_path = "C:/Users/Jaist/Documents/GitHub/BA_DEM/GUI/examples/pp_central_elastic.py"
+module_path = "/GUI/examples/pp_elastic_central.py"
 module_name = 'pp_central_elastic'
 
 spec = importlib.util.spec_from_file_location(module_name, module_path)

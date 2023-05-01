@@ -42,24 +42,24 @@ pg.display.set_caption('simulation of two particles')
 animationTimer = pg.time.Clock()
 
 # -- simulation --
-# Particle(position, velocity, acceleration, force, rotation_vel, rotation_acc, torque, radius, elstiffnesn,
+# Particle(position, velocity, acceleration, force, rotation_vel, rotation_acc, torque, radius, k_n,
 #                  mass, pred_position, interpenetration_vel):
 # pred_position [x,y] (initialisiert mit 0)):
 #parallel_1 = Particle(position=np.array([450, 500, 0]), velocity=np.array([100, 0, 0]),
                      # acceleration=np.array([0, 0, 0]), force=np.array([0, 0, 0]), rotation=np.array([0, 0, 0]), rotation_vel=np.array([0, 0, 0]),
-                      #rotation_acc=np.array([0, 0, 0]), torque=np.array([0, 0, 0]), radius=50, elstiffnesn=2000,
+                      #rotation_acc=np.array([0, 0, 0]), torque=np.array([0, 0, 0]), radius=50, k_n=2000,
                      # mass=50, pred_position=np.array([300, 300, 0]), interpenetration_vel=np.array([0, 0, 0]))
 #parallel_2 = Particle(position=np.array([600, 500, 0]), velocity=np.array([0, 0, 0]),
                       #acceleration=np.array([0, 0, 0]), force=np.array([0, 0, 0]), rotation=np.array([0, 0, 0]), rotation_vel=np.array([0, 0, 0]),
-                      #rotation_acc=np.array([0, 0, 0]), torque=np.array([0, 0, 0]), radius=50, elstiffnesn=2000,
+                      #rotation_acc=np.array([0, 0, 0]), torque=np.array([0, 0, 0]), radius=50, k_n=2000,
                       #mass=50, pred_position=np.array([300, 300, 0]), interpenetration_vel=np.array([0, 0, 0]))
 #schief_1 = Particle(position=np.array([500, 500, 0]), velocity=np.array([25, 25, 0]),
                       #acceleration=np.array([0, 0, 0]), force=np.array([0, 0, 0]), rotation=np.array([0, 0, 0]), rotation_vel=np.array([0, 0, 0]),
-                      #rotation_acc=np.array([0, 0, 0]), torque=np.array([0, 0, 0]), radius=50, elstiffnesn=200000,
+                      #rotation_acc=np.array([0, 0, 0]), torque=np.array([0, 0, 0]), radius=50, k_n=200000,
                       #mass=50, pred_position=np.array([300, 300, 0]), interpenetration_vel=np.array([0, 0, 0]))
 #schief_2 = Particle(position=np.array([580, 580, 0]), velocity=np.array([0, 0, 0]),
                       #acceleration=np.array([0, 0, 0]), force=np.array([0, 0, 0]), rotation=np.array([0, 0, 0]), rotation_vel=np.array([0, 0, 0]),
-                      #rotation_acc=np.array([0, 0, 0]), torque=np.array([0, 0, 0]), radius=50, elstiffnesn=200000,
+                      #rotation_acc=np.array([0, 0, 0]), torque=np.array([0, 0, 0]), radius=50, k_n=200000,
                       #mass=50, pred_position=np.array([300, 300, 0]), interpenetration_vel=np.array([0, 0, 0]))
 rotation_1 = Particle(position=np.array([500, 500, 0]), velocity=np.array([50, 50, 0]),
                       acceleration=np.array([0, 0, 0]), force=np.array([0, 0, 0]), rotation=np.array([0, 0, 0]), rotation_vel=np.array([0, 0, 0]),
@@ -71,23 +71,23 @@ rotation_2 = Particle(position=np.array([500, 620, 0]), velocity=np.array([0, 0,
                       mass=50, pred_position=np.array([300, 300, 0]), interpenetration_vel=np.array([0, 0, 0]))
 #rotation_plot = Particle(position=np.array([500, 500, 0]), velocity=np.array([50, 0, 0]),
                       #acceleration=np.array([0, 0, 0]), force=np.array([0, 0, 0]), rotation=np.array([0, 0, 0]), rotation_vel=np.array([0, 0, 1.5]),
-                      #rotation_acc=np.array([0, 0, 0]), torque=np.array([0, 0, 0]), radius=50, elstiffnesn=2000,
+                      #rotation_acc=np.array([0, 0, 0]), torque=np.array([0, 0, 0]), radius=50, k_n=2000,
                       #mass=50, pred_position=np.array([300, 300, 0]), interpenetration_vel=np.array([0, 0, 0]))
 #cortesting_1 = Particle(position=np.array([500, 500, 0]), velocity=np.array([25, 0, 0]),
                       #acceleration=np.array([0, 0, 0]), force=np.array([0, 0, 0]), rotation=np.array([0, 0, 0]), rotation_vel=np.array([0, 0, 0]),
-                      #rotation_acc=np.array([0, 0, 0]), torque=np.array([0, 0, 0]), radius=50, elstiffnesn=2000,
+                      #rotation_acc=np.array([0, 0, 0]), torque=np.array([0, 0, 0]), radius=50, k_n=2000,
                       #mass=50, pred_position=np.array([300, 300, 0]), interpenetration_vel=np.array([0, 0, 0]))
 #cortesting_2 = Particle(position=np.array([620, 500, 0]), velocity=np.array([0, 0, 0]),
                       #acceleration=np.array([0, 0, 0]), force=np.array([0, 0, 0]), rotation=np.array([0, 0, 0]), rotation_vel=np.array([0, 0, 0]),
-                      #rotation_acc=np.array([0, 0, 0]), torque=np.array([0, 0, 0]), radius=50, elstiffnesn=2000,
+                      #rotation_acc=np.array([0, 0, 0]), torque=np.array([0, 0, 0]), radius=50, k_n=2000,
                       #mass=50, pred_position=np.array([300, 300, 0]), interpenetration_vel=np.array([0, 0, 0]))
 #rotation_rigid1 = Particle(position=np.array([590, 350, 0]), velocity=np.array([0, 0, 0]),
                       #acceleration=np.array([0, 0, 0]), force=np.array([0, 0, 0]), rotation=np.array([0, 0, 0]), rotation_vel=np.array([0, 0, 0]),
-                      #rotation_acc=np.array([0, 0, 0]), torque=np.array([0, 0, 0]), radius=50, elstiffnesn=2000,
+                      #rotation_acc=np.array([0, 0, 0]), torque=np.array([0, 0, 0]), radius=50, k_n=2000,
                       #mass=50, pred_position=np.array([300, 300, 0]), interpenetration_vel=np.array([0, 0, 0]))
 #rotation_rigid2 = Particle(position=np.array([590, 500, 0]), velocity=np.array([0, 0, 0]),
                       #acceleration=np.array([0, 0, 0]), force=np.array([0, 0, 0]), rotation=np.array([0, 0, 0]), rotation_vel=np.array([0, 0, 0]),
-                      #rotation_acc=np.array([0, 0, 0]), torque=np.array([0, 0, 0]), radius=50, elstiffnesn=2000,
+                      #rotation_acc=np.array([0, 0, 0]), torque=np.array([0, 0, 0]), radius=50, k_n=2000,
                       #mass=500000, pred_position=np.array([300, 300, 0]), interpenetration_vel=np.array([0, 0, 0]))
 # b1 = Boundary(np.array([50, 700, 0]), np.array([700, 700, 0]), np.array([0,0]))
 # -- simulation parameters
@@ -96,10 +96,10 @@ coeff_of_restitution = 1
 # damp_coeff = fn.calculate_damp_coeff(coeff_of_restitution)
 damp_coeff = cor.RootByBisection(0.0, 16.0, 0.0001, 300, coeff_of_restitution)
 mu = 0.7 # Reibkoeffizient
-# k_t = 0.8*cortesting_1.elstiffnesn
+# k_t = 0.8*cortesting_1.k_n
 crit_steps = []
 for particle in Particle.all_particles:
-    crit_steps.append(0.3 * 2 * np.sqrt(particle.mass/particle.elstiffnesn))
+    crit_steps.append(0.3 * 2 * np.sqrt(particle.mass / particle.k_n))
 crit_dt = min(crit_steps)
 print("required time step < ", crit_dt)
 print("Dämpfung: ", damp_coeff)
@@ -181,7 +181,7 @@ for t in np.arange(0, simtime, dt):
             normal_ji = (pi.position - pj.position) / norm_cij
 
             # Quellenangabe wäre gut
-            elstiffnesn_eq = (pi.elstiffnesn * pj.elstiffnesn) / (pi.elstiffnesn + pj.elstiffnesn)
+            elstiffnesn_eq = (pi.k_n * pj.k_n) / (pi.k_n + pj.k_n)
             m_eq = (pi.mass * pj.mass) / (pi.mass + pj.mass)
             radius_eq = (pi.radius*pj.radius) / (pi.radius+pj.radius)
             k_t = elstiffnesn_eq * 0.8
@@ -199,9 +199,9 @@ for t in np.arange(0, simtime, dt):
                 # -- kinematik für t_ij im lokalen Koordinatensystem
                 # hilfsvektoren von center of Particle zu point of contact
                 r_ijc = (pi.radius - (
-                            pj.elstiffnesn / (pi.elstiffnesn + pj.elstiffnesn)) * interpenetration) * normal_ij
+                        pj.k_n / (pi.k_n + pj.k_n)) * interpenetration) * normal_ij
                 r_jic = (pj.radius - (
-                            pi.elstiffnesn / (pi.elstiffnesn + pj.elstiffnesn)) * interpenetration) * normal_ji
+                        pi.k_n / (pi.k_n + pj.k_n)) * interpenetration) * normal_ji
                 # position of the contact point
                 p_ijc = pi.position + r_ijc  # ortsvektor/point of contact from p1
                 p_jic = pj.position + r_jic  # point of contact from p2 ==p_ijc

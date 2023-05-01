@@ -13,8 +13,8 @@ velocity1 = np.array([50,0,0])
 teilchen = [Particle(position=position1, velocity=velocity1, acceleration=np.array([0, 0, 0]),
                             force=np.array([0, 0, 0]), rotation=np.array([0, 0, 0]),
                             rotation_vel=np.array([0, 0, 0]), rotation_acc=np.array([0, 0, 0]),
-                            torque=np.array([0, 0, 0]), radius=radius1, elstiffnesn=elstiffnessn1, mass=mass1,
-                            pred_position=np.array([0, 0, 0]), interpenetration_vel=np.array([0, 0, 0]))
+                            torque=np.array([0, 0, 0]), radius=radius1, k_n=elstiffnessn1, mass=mass1,
+                            pred_position=np.array([0, 0, 0]), interpenetration_vel=np.array([0, 0, 0]), poisson=0.3)
             ]
 
 grenzen = [Boundary((700, 400), (800, 100))

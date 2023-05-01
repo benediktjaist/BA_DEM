@@ -52,7 +52,7 @@ class System(QObject):
     def __calculate_critical_time_step(self):
         crit_steps = []
         for particle in self.particles:
-            crit_steps.append(0.3 * 2 * np.sqrt(particle.mass / particle.elstiffnesn))
+            crit_steps.append(0.3 * 2 * np.sqrt(particle.mass / particle.k_n))
         return min(crit_steps)
 
     def run_simulation(self):
@@ -95,7 +95,7 @@ class System(QObject):
                     normal_ij = (pj.position - pi.position) / norm_cij
                     normal_ji = (pi.position - pj.position) / norm_cij
 
-                    elstiffnesn_eq = (pi.elstiffnesn * pj.elstiffnesn) / (pi.elstiffnesn + pj.elstiffnesn)
+                    elstiffnesn_eq = (pi.k_n * pj.k_n) / (pi.k_n + pj.k_n)
                     m_eq = (pi.mass * pj.mass) / (pi.mass + pj.mass)
                     radius_eq = (pi.radius * pj.radius) / (pi.radius + pj.radius)
                     k_t = elstiffnesn_eq * 0.8
@@ -109,9 +109,9 @@ class System(QObject):
                         i_acc = np.linalg.norm(interpenetration_acc)
 
                         r_ijc = (pi.radius - (
-                                    pj.elstiffnesn / (pi.elstiffnesn + pj.elstiffnesn)) * interpenetration) * normal_ij
+                                pj.k_n / (pi.k_n + pj.k_n)) * interpenetration) * normal_ij
                         r_jic = (pj.radius - (
-                                    pi.elstiffnesn / (pi.elstiffnesn + pj.elstiffnesn)) * interpenetration) * normal_ji
+                                pi.k_n / (pi.k_n + pj.k_n)) * interpenetration) * normal_ji
 
                         p_ijc = pi.position + r_ijc  # ortsvektor/point of contact from p1
                         p_jic = pj.position + r_jic  # point of contact from p2 ==p_ijc
@@ -217,7 +217,7 @@ class System(QObject):
                             poc = np.array([boundary.start_point[0], y_mid, 0])
                             print('poc vertikal ', poc)
                             normal_ib = (poc - pi.position) / np.linalg.norm(poc - pi.position)
-                            elstiffnesn_eq = pi.elstiffnesn
+                            elstiffnesn_eq = pi.k_n
                             m_eq = pi.mass
                             radius_eq = pi.radius
                             k_t = elstiffnesn_eq * 0.8
@@ -300,7 +300,7 @@ class System(QObject):
 
                             normal_ib = (poc - pi.position) / np.linalg.norm(poc - pi.position)
                             # AttributeError: 'Float' object has no attribute 'sqrt'
-                            elstiffnesn_eq = pi.elstiffnesn
+                            elstiffnesn_eq = pi.k_n
                             m_eq = pi.mass
                             radius_eq = pi.radius
                             k_t = elstiffnesn_eq * 0.8

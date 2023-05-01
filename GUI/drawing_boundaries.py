@@ -1,6 +1,7 @@
 import pygame
 from Boundary import Boundary
 from Colours import get_colour_tuple
+import numpy as np
 
 
 def boundary_creator():
@@ -48,15 +49,14 @@ def boundary_creator():
             pygame.display.update()
             if event.type == pygame.QUIT:
                 done = True
-            elif event.type == pygame.VIDEORESIZE:
-                pygame.transform.scale(screen, (1300, 800))
-                pygame.display.init()
+
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 # If the left mouse button is pressed, snap the starting position to the nearest node of the grid
                 if event.button == 1:
                     x, y = event.pos
                     start_pos = (GRID_SIZE * round(x / GRID_SIZE), GRID_SIZE * round(y / GRID_SIZE))
                     end_pos = (GRID_SIZE * round(x / GRID_SIZE), GRID_SIZE * round(y / GRID_SIZE))
+
             elif event.type == pygame.MOUSEMOTION:
                 # If the left mouse button is pressed, update the ending position and show the line
                 if event.buttons[0] == 1:
@@ -68,7 +68,7 @@ def boundary_creator():
                     for line in lines:
                         pygame.draw.line(screen, get_colour_tuple('red'), line[0], line[1], 5)
                     for boundary in boundaries:
-                        pygame.draw.line(screen, get_colour_tuple('green'), boundary.start_point, boundary.end_point, 5)
+                        pygame.draw.line(screen, get_colour_tuple('green'), (boundary.start_point[0], boundary.start_point[1]), (boundary.end_point[0], boundary.end_point[1]), 5)
                     # Draw the current line being drawn
                     pygame.draw.line(screen, get_colour_tuple('red'), start_pos, end_pos, 5)
 
@@ -88,14 +88,13 @@ def boundary_creator():
                     lines = []
 
                     # Create ip1 boundary with the two points of the line and add it to the list of boundaries
-                    if start_pos != end_pos:
+                    if start_pos != end_pos and np.sqrt((end_pos[0]-start_pos[0])**2 + (end_pos[1]-start_pos[1])**2) >= 10:
                         boundaries.append(Boundary(start_pos, end_pos))
 
                     # Clear the screen and draw the boundaries
                     screen.fill(get_colour_tuple('white'))
                     for boundary in boundaries:
-                        pygame.draw.line(screen, get_colour_tuple('green'), boundary.start_point, boundary.end_point, 5)
-
+                        pygame.draw.line(screen, get_colour_tuple('green'), (boundary.start_point[0], boundary.start_point[1]), (boundary.end_point[0], boundary.end_point[1]), 5)
                     # Update the screen
                     pygame.display.flip()
 
@@ -108,35 +107,9 @@ def boundary_creator():
         for line in lines:
             pygame.draw.line(screen, get_colour_tuple('red'), line[0], line[1], 5)
 
-        # Handle events
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                done = True
-            elif event.type == pygame.MOUSEBUTTONDOWN:
-                # If the left mouse button is pressed, snap the starting position to the nearest node of the grid
-                if event.button == 1:
-                    x, y = event.pos
-                    start_pos = (GRID_SIZE * round(x / GRID_SIZE), GRID_SIZE * round(y / GRID_SIZE))
-                    end_pos = (GRID_SIZE * round(x / GRID_SIZE), GRID_SIZE * round(y / GRID_SIZE))
-            elif event.type == pygame.MOUSEMOTION:
-                # If the left mouse button is pressed, update the ending position and show the line
-                if event.buttons[0] == 1:
-                    x, y = event.pos
-                    end_pos = (GRID_SIZE * round(x / GRID_SIZE), GRID_SIZE * round(y / GRID_SIZE))
-            elif event.type == pygame.MOUSEBUTTONUP:
-                # If the left mouse button is released, add the line to the list of lines
-                if event.button == 1:
-                    lines.append((start_pos, end_pos))
-                    # Draw the red line
-                    pygame.draw.line(screen, get_colour_tuple('red'), start_pos, end_pos, 5)
-                    # Create ip1 boundary with the two points of the line and add it to the list of boundaries
-                    boundaries.append(Boundary(start_pos, end_pos))
-                    # Clear the list of lines
-                    lines = []
-
         # Draw the boundaries
         for boundary in boundaries:
-            pygame.draw.line(screen, get_colour_tuple('green'), boundary.start_point, boundary.end_point, 5)
+            pygame.draw.line(screen, get_colour_tuple('green'), (boundary.start_point[0], boundary.start_point[1]), (boundary.end_point[0], boundary.end_point[1]), 5)
 
         # Display the current position of the mouse in steps of 10
         mouse_pos = pygame.mouse.get_pos()
@@ -166,3 +139,38 @@ if __name__ == "__main__":
 
 # sometimes there are visible artefacts (GREEN) of boundaries, this is probably due to the
 # incorrect condition for the creation of boundaries only at the nodes.
+'''            
+elif event.type == pygame.VIDEORESIZE:
+                pygame.transform.scale(screen, (1328, 832))
+                pygame.display.init()
+                
+                 '''
+
+# dieses snippet war nach 109
+'''
+        # Handle events
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                done = True
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                # If the left mouse button is pressed, snap the starting position to the nearest node of the grid
+                if event.button == 1:
+                    x, y = event.pos
+                    start_pos = (GRID_SIZE * round(x / GRID_SIZE), GRID_SIZE * round(y / GRID_SIZE))
+                    end_pos = (GRID_SIZE * round(x / GRID_SIZE), GRID_SIZE * round(y / GRID_SIZE))
+            elif event.type == pygame.MOUSEMOTION:
+                # If the left mouse button is pressed, update the ending position and show the line
+                if event.buttons[0] == 1:
+                    x, y = event.pos
+                    end_pos = (GRID_SIZE * round(x / GRID_SIZE), GRID_SIZE * round(y / GRID_SIZE))
+            elif event.type == pygame.MOUSEBUTTONUP:
+                # If the left mouse button is released, add the line to the list of lines
+                if event.button == 1:
+                    lines.append((start_pos, end_pos))
+                    # Draw the red line
+                    pygame.draw.line(screen, get_colour_tuple('red'), start_pos, end_pos, 5)
+                    # Create ip1 boundary with the two points of the line and add it to the list of boundaries
+                    boundaries.append(Boundary(start_pos, end_pos))
+                    # Clear the list of lines
+                    lines = []
+'''

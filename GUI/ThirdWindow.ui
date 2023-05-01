@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>440</width>
-    <height>600</height>
+    <width>525</width>
+    <height>682</height>
    </rect>
   </property>
   <property name="font">
@@ -19,48 +19,84 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
+   <widget class="QWidget" name="layoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>70</x>
+      <y>30</y>
+      <width>212</width>
+      <height>57</height>
+     </rect>
+    </property>
+    <layout class="QGridLayout" name="gridLayout_4">
+     <item row="0" column="0">
+      <widget class="QLabel" name="num_particles_label">
+       <property name="text">
+        <string>Number of Particles</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QSpinBox" name="num_particles_box">
+       <property name="minimum">
+        <number>1</number>
+       </property>
+       <property name="value">
+        <number>5</number>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="QLabel" name="dist_factor_lab">
+       <property name="font">
+        <font>
+         <family>Arial</family>
+         <pointsize>8</pointsize>
+        </font>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::NoFrame</enum>
+       </property>
+       <property name="text">
+        <string>maximum distance faktor</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QDoubleSpinBox" name="dist_factor_box">
+       <property name="decimals">
+        <number>1</number>
+       </property>
+       <property name="singleStep">
+        <double>0.100000000000000</double>
+       </property>
+       <property name="value">
+        <double>1.000000000000000</double>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
    <widget class="QPushButton" name="back">
     <property name="geometry">
      <rect>
-      <x>120</x>
-      <y>490</y>
-      <width>168</width>
-      <height>51</height>
+      <x>260</x>
+      <y>480</y>
+      <width>141</width>
+      <height>25</height>
      </rect>
     </property>
     <property name="text">
      <string>save and close</string>
     </property>
    </widget>
-   <widget class="QLabel" name="dist_factor_explanation">
+   <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
-      <x>190</x>
-      <y>50</y>
-      <width>91</width>
-      <height>29</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>Arial</family>
-      <pointsize>4</pointsize>
-     </font>
-    </property>
-    <property name="frameShape">
-     <enum>QFrame::NoFrame</enum>
-    </property>
-    <property name="text">
-     <string>times maximum Radius</string>
-    </property>
-   </widget>
-   <widget class="QWidget" name="">
-    <property name="geometry">
-     <rect>
-      <x>30</x>
-      <y>110</y>
-      <width>201</width>
-      <height>201</height>
+      <x>31</x>
+      <y>112</y>
+      <width>341</width>
+      <height>300</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="gridLayout">
@@ -69,7 +105,7 @@
        <property name="font">
         <font>
          <family>Arial</family>
-         <pointsize>4</pointsize>
+         <pointsize>8</pointsize>
         </font>
        </property>
        <property name="frameShape">
@@ -85,7 +121,7 @@
        <property name="font">
         <font>
          <family>Arial</family>
-         <pointsize>4</pointsize>
+         <pointsize>8</pointsize>
         </font>
        </property>
        <property name="frameShape">
@@ -101,7 +137,7 @@
        <property name="font">
         <font>
          <family>Arial</family>
-         <pointsize>4</pointsize>
+         <pointsize>8</pointsize>
         </font>
        </property>
        <property name="frameShape">
@@ -122,32 +158,32 @@
      <item row="1" column="1">
       <widget class="QSpinBox" name="vel_x_min_box">
        <property name="minimum">
-        <number>-100</number>
+        <number>-1000</number>
        </property>
        <property name="maximum">
-        <number>100</number>
+        <number>1000</number>
        </property>
        <property name="singleStep">
         <number>10</number>
        </property>
        <property name="value">
-        <number>-50</number>
+        <number>-70</number>
        </property>
       </widget>
      </item>
      <item row="1" column="2">
       <widget class="QSpinBox" name="vel_x_max_box">
        <property name="minimum">
-        <number>-100</number>
+        <number>-1000</number>
        </property>
        <property name="maximum">
-        <number>100</number>
+        <number>1000</number>
        </property>
        <property name="singleStep">
         <number>10</number>
        </property>
        <property name="value">
-        <number>50</number>
+        <number>70</number>
        </property>
       </widget>
      </item>
@@ -161,32 +197,32 @@
      <item row="2" column="1">
       <widget class="QSpinBox" name="vel_y_min_box">
        <property name="minimum">
-        <number>-100</number>
+        <number>-1000</number>
        </property>
        <property name="maximum">
-        <number>100</number>
+        <number>1000</number>
        </property>
        <property name="singleStep">
         <number>10</number>
        </property>
        <property name="value">
-        <number>-50</number>
+        <number>-70</number>
        </property>
       </widget>
      </item>
      <item row="2" column="2">
       <widget class="QSpinBox" name="vel_y_max_box">
        <property name="minimum">
-        <number>-100</number>
+        <number>-1000</number>
        </property>
        <property name="maximum">
-        <number>100</number>
+        <number>1000</number>
        </property>
        <property name="singleStep">
         <number>10</number>
        </property>
        <property name="value">
-        <number>50</number>
+        <number>70</number>
        </property>
       </widget>
      </item>
@@ -195,7 +231,7 @@
        <property name="font">
         <font>
          <family>Arial</family>
-         <pointsize>4</pointsize>
+         <pointsize>8</pointsize>
         </font>
        </property>
        <property name="frameShape">
@@ -272,7 +308,7 @@
         <number>100</number>
        </property>
        <property name="value">
-        <number>50</number>
+        <number>80</number>
        </property>
       </widget>
      </item>
@@ -284,129 +320,43 @@
       </widget>
      </item>
      <item row="6" column="1">
-      <widget class="QSpinBox" name="mass_min_box"/>
+      <widget class="QSpinBox" name="mass_min_box">
+       <property name="minimum">
+        <number>10</number>
+       </property>
+       <property name="maximum">
+        <number>10000</number>
+       </property>
+       <property name="value">
+        <number>100</number>
+       </property>
+      </widget>
      </item>
      <item row="6" column="2">
-      <widget class="QSpinBox" name="mass_max_box"/>
-     </item>
-    </layout>
-   </widget>
-   <widget class="QWidget" name="">
-    <property name="geometry">
-     <rect>
-      <x>70</x>
-      <y>30</y>
-      <width>114</width>
-      <height>50</height>
-     </rect>
-    </property>
-    <layout class="QGridLayout" name="gridLayout_4">
-     <item row="0" column="0">
-      <widget class="QLabel" name="num_particles_label">
-       <property name="text">
-        <string>Number of Particles</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="1">
-      <widget class="QSpinBox" name="num_particles_box">
+      <widget class="QSpinBox" name="mass_max_box">
        <property name="minimum">
-        <number>1</number>
+        <number>10</number>
+       </property>
+       <property name="maximum">
+        <number>100000</number>
        </property>
        <property name="value">
-        <number>5</number>
+        <number>200</number>
        </property>
       </widget>
      </item>
-     <item row="1" column="0">
-      <widget class="QLabel" name="dist_factor_lab">
-       <property name="font">
-        <font>
-         <family>Arial</family>
-         <pointsize>4</pointsize>
-        </font>
-       </property>
-       <property name="frameShape">
-        <enum>QFrame::NoFrame</enum>
-       </property>
+     <item row="7" column="0">
+      <widget class="QLabel" name="stiffnes_lab_3">
        <property name="text">
-        <string>maximum distance faktor</string>
+        <string>Young's Modulus</string>
        </property>
       </widget>
      </item>
-     <item row="1" column="1">
-      <widget class="QDoubleSpinBox" name="dist_factor_box">
-       <property name="decimals">
-        <number>1</number>
+     <item row="7" column="1">
+      <widget class="QSpinBox" name="young_min">
+       <property name="minimum">
+        <number>100</number>
        </property>
-       <property name="singleStep">
-        <double>0.100000000000000</double>
-       </property>
-       <property name="value">
-        <double>1.000000000000000</double>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </widget>
-   <widget class="QWidget" name="">
-    <property name="geometry">
-     <rect>
-      <x>30</x>
-      <y>371</y>
-      <width>160</width>
-      <height>64</height>
-     </rect>
-    </property>
-    <layout class="QGridLayout" name="gridLayout_2">
-     <item row="0" column="0">
-      <widget class="QLabel" name="mass_lab_2">
-       <property name="text">
-        <string>LSD Parameters</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="1">
-      <widget class="QLabel" name="pos_lab_7">
-       <property name="font">
-        <font>
-         <family>Arial</family>
-         <pointsize>4</pointsize>
-        </font>
-       </property>
-       <property name="frameShape">
-        <enum>QFrame::NoFrame</enum>
-       </property>
-       <property name="text">
-        <string>minimum Value</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="2">
-      <widget class="QLabel" name="pos_lab_8">
-       <property name="font">
-        <font>
-         <family>Arial</family>
-         <pointsize>4</pointsize>
-        </font>
-       </property>
-       <property name="frameShape">
-        <enum>QFrame::NoFrame</enum>
-       </property>
-       <property name="text">
-        <string>maximum Value</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="0">
-      <widget class="QLabel" name="stiffnes_lab">
-       <property name="text">
-        <string>normal stiffness</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="1">
-      <widget class="QSpinBox" name="spinBox_14">
        <property name="maximum">
         <number>200000</number>
        </property>
@@ -418,8 +368,11 @@
        </property>
       </widget>
      </item>
-     <item row="1" column="2">
-      <widget class="QSpinBox" name="spinBox_15">
+     <item row="7" column="2">
+      <widget class="QSpinBox" name="young_max">
+       <property name="minimum">
+        <number>100</number>
+       </property>
        <property name="maximum">
         <number>2000000</number>
        </property>
@@ -431,15 +384,15 @@
        </property>
       </widget>
      </item>
-     <item row="2" column="0">
+     <item row="8" column="0">
       <widget class="QLabel" name="lsd_poisson">
        <property name="text">
         <string>poisson ratio</string>
        </property>
       </widget>
      </item>
-     <item row="2" column="1">
-      <widget class="QDoubleSpinBox" name="lsd_min_poisson_box">
+     <item row="8" column="1">
+      <widget class="QDoubleSpinBox" name="poisson_min_box">
        <property name="maximum">
         <double>1.000000000000000</double>
        </property>
@@ -451,8 +404,8 @@
        </property>
       </widget>
      </item>
-     <item row="2" column="2">
-      <widget class="QDoubleSpinBox" name="lsd_max_poisson_box">
+     <item row="8" column="2">
+      <widget class="QDoubleSpinBox" name="poisson_max_box">
        <property name="maximum">
         <double>1.000000000000000</double>
        </property>
@@ -464,129 +417,10 @@
        </property>
       </widget>
      </item>
-    </layout>
-   </widget>
-   <widget class="QWidget" name="">
-    <property name="geometry">
-     <rect>
-      <x>220</x>
-      <y>360</y>
-      <width>166</width>
-      <height>91</height>
-     </rect>
-    </property>
-    <layout class="QGridLayout" name="gridLayout_3">
-     <item row="0" column="0">
-      <widget class="QLabel" name="mass_lab_3">
+     <item row="9" column="1" colspan="2">
+      <widget class="QPushButton" name="confirm_part_props">
        <property name="text">
-        <string>HMD Parameters</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="1">
-      <widget class="QLabel" name="pos_lab_10">
-       <property name="font">
-        <font>
-         <family>Arial</family>
-         <pointsize>4</pointsize>
-        </font>
-       </property>
-       <property name="frameShape">
-        <enum>QFrame::NoFrame</enum>
-       </property>
-       <property name="text">
-        <string>minimum Value</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="2">
-      <widget class="QLabel" name="pos_lab_9">
-       <property name="font">
-        <font>
-         <family>Arial</family>
-         <pointsize>4</pointsize>
-        </font>
-       </property>
-       <property name="frameShape">
-        <enum>QFrame::NoFrame</enum>
-       </property>
-       <property name="text">
-        <string>maximum Value</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="0">
-      <widget class="QLabel" name="stiffnes_lab_3">
-       <property name="text">
-        <string>Young's Modulus</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="1">
-      <widget class="QSpinBox" name="spinBox_16">
-       <property name="maximum">
-        <number>2000000</number>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="2">
-      <widget class="QSpinBox" name="spinBox_17">
-       <property name="maximum">
-        <number>2000000</number>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="0">
-      <widget class="QLabel" name="stiffnes_lab_4">
-       <property name="text">
-        <string>Shear Modulus</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="1">
-      <widget class="QSpinBox" name="spinBox_18">
-       <property name="maximum">
-        <number>2000000</number>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="2">
-      <widget class="QSpinBox" name="spinBox_19">
-       <property name="maximum">
-        <number>2000000</number>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="0">
-      <widget class="QLabel" name="hmd_poisson">
-       <property name="text">
-        <string>poisson ratio</string>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="1">
-      <widget class="QDoubleSpinBox" name="hmd_min_poisson_box">
-       <property name="maximum">
-        <double>1.000000000000000</double>
-       </property>
-       <property name="singleStep">
-        <double>0.100000000000000</double>
-       </property>
-       <property name="value">
-        <double>0.300000000000000</double>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="2">
-      <widget class="QDoubleSpinBox" name="hmd_max_poisson_box">
-       <property name="maximum">
-        <double>1.000000000000000</double>
-       </property>
-       <property name="singleStep">
-        <double>0.100000000000000</double>
-       </property>
-       <property name="value">
-        <double>0.300000000000000</double>
+        <string>confirm entry</string>
        </property>
       </widget>
      </item>

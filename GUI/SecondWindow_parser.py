@@ -37,9 +37,12 @@ class SecondWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     def create_particle(self):
         position_str = self.position.text().split(',')
         velocity_str = self.velocity.text().split(',')
+        rot_vel = float(self.rot_vel.text())
+        rotation = float(self.rotation.text())
         radius = float(self.radius.text())
         elstiffnessn = float(self.stiffnes.text())
         mass = float(self.mass.text())
+        poisson = float(self.poisson.text())
 
         try:
             position = np.array([float(position_str[0]), float(position_str[1]), 0])
@@ -50,10 +53,12 @@ class SecondWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             return None
 
         particle = Particle(position=position, velocity=velocity, acceleration=np.array([0, 0, 0]),
-                            force=np.array([0, 0, 0]), rotation=np.array([0, 0, 0]),
-                            rotation_vel=np.array([0, 0, 0]), rotation_acc=np.array([0, 0, 0]),
-                            torque=np.array([0, 0, 0]), radius=radius, elstiffnesn=elstiffnessn, mass=mass,
-                            pred_position=np.array([0, 0, 0]), interpenetration_vel=np.array([0, 0, 0]))
+                            force=np.array([0, 0, 0]), rotation=np.array([0, 0, float(rotation)]),
+                            rotation_vel=np.array([0, 0, float(rot_vel)]), rotation_acc=np.array([0, 0, 0]),
+                            torque=np.array([0, 0, 0]), radius=radius, k_n=elstiffnessn, mass=mass,
+                            pred_position=np.array([0, 0, 0]), interpenetration_vel=np.array([0, 0, 0]), poisson=poisson)
+        print(particle)
         return particle
+
 
 

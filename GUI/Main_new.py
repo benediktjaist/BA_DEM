@@ -8,13 +8,16 @@ import numpy as np
 from PyQt6 import QtWidgets, QtGui
 from PyQt6.QtCore import QDir
 from PyQt6.QtWidgets import QMessageBox
-
 from MainWindow_test import Ui_MainWindow
 from SecondWindow_parser import SecondWindow
+from ThirdWindow_parser import ThirdWindow
 from drawing_boundaries import boundary_creator
 from DEM_Solver import System
 from Preview_Assembly import Assembly
 from Video_Creator import VideoCreator
+from Random_particles import generate_random_circles
+from Boundary import Boundary
+from Plot_Creator import PlotCreator
 
 
 def normalize_path(path):
@@ -50,12 +53,14 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.particles = []
         self.boundaries = []
         self.gravity = False
+        self.contact_model = "LSD"
         self.cor = 1.0
         self.dt = 0.001
         self.simtime = 1
         self.mu = 0.5
         self.vid_dir = "C:/Users/Jaist/Desktop/ba_videos"
         self.vid_name = "test2.mp4"
+        self.contact_model_box.addItems(['LSD','HMD'])
         self.fps = 50
         self.secondWindow.clicked.connect(self.second_window_calling)
         # self.Particles.clicked.connect()
@@ -77,6 +82,23 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.import_comboBox.addItems(self.get_file_names())
         self.import_change_path.clicked.connect(self.import_comboBox.clear)
         self.import_change_path.clicked.connect(lambda: self.import_comboBox.addItems(self.get_file_names()))
+        self.contact_model_box.currentTextChanged.connect(self.update_contact_model)
+        self.random_particles.clicked.connect(self.third_window_calling)
+        self.create_plot.clicked.connect(self.create_energy_plot)
+
+
+    def create_random_particles(self):
+        pass
+
+    def create_energy_plot(self):
+        plotter = PlotCreator(particles=self.particles, dt=self.dt, simtime=self.simtime, directory=self.plot_dir_edit.text(), plot_name=self.plot_name_edit.text())
+        plotter.plot()
+        self.message_created_plot()
+
+
+    def update_contact_model(self, text):
+        self.contact_model = text
+        print(self.contact_model)
 
     def import_assembly(self):
         # Deleting particles and boundaries from a previous import
@@ -91,23 +113,23 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(module)
         # change attributes
-        for id, teil in enumerate(module.teilchen):
-            self.particles.append(teil)
-            teil.id = id
-        for id, grenze in enumerate(module.grenzen):
-            self.boundaries.append(grenze)
-            grenze.id = id
-        self.gravity = module.gravitation
-        self.cor = module.kor
-        self.dt = module.tinkr
-        self.simtime = module.simzeit
-        self.mu = module.mue
+        for id, particle_to_import in enumerate(module.particles_to_import):
+            self.particles.append(particle_to_import)
+            particle_to_import.id = id
+        for id, boundary_to_import in enumerate(module.boundaries_to_import):
+            self.boundaries.append(boundary_to_import)
+            boundary_to_import.id = id
+        self.gravity = module.gravitation_to_import
+        self.cor = module.cor_to_import
+        self.dt = module.dt_to_import
+        self.simtime = module.simtime_to_import
+        self.mu = module.mu_to_import
         self.message_import_finished()
         # change displayed attributes
-        self.cor_SpinBox.setValue(module.kor)
-        self.dt_SpinBox.setValue(module.tinkr)
-        self.simtime_SpinBox.setValue(module.simzeit)
-        self.mu_SpinBox.setValue(module.mue)
+        self.cor_SpinBox.setValue(module.cor_to_import)
+        self.dt_SpinBox.setValue(module.dt_to_import)
+        self.simtime_SpinBox.setValue(module.simtime_to_import)
+        self.mu_SpinBox.setValue(module.mu_to_import)
         if self.gravity == True:
             self.gravity_checkBox.setChecked(True)
         else:
@@ -168,6 +190,26 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         print(self.particles[0])
         print(type(self.particles[0].position))
 
+    def third_window_calling(self):
+        self.third_window = ThirdWindow(parent=self)
+        self.third_window.list_of_particle_prop_limits.connect(self.receive_particle_prop_limits)
+        self.third_window.show()
+
+    def receive_particle_prop_limits(self, particle_props):
+        self.particle_prop_limits = particle_props
+        print(self.particle_prop_limits)
+        self.particles = generate_random_circles(self.particle_prop_limits)
+        self.boundaries = [Boundary((1228, 50), (50, 50)),
+                            Boundary((50, 50), (50, 782)),
+                            Boundary((50, 782), (1228, 782)),
+                            Boundary((1228, 782), (1228, 50))]
+
+        for id, particlee in enumerate(self.particles):
+            particlee.id = id
+
+        for id, bound in enumerate(self.boundaries):
+            bound.id = id
+
     def delete_particles(self):
         self.particles = []
         self.message_deleted_particles()
@@ -189,7 +231,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
     def run_simulation(self):
         system = System(particles=self.particles, boundaries=self.boundaries, dt=self.dt, simtime=self.simtime,
-                        mu=self.mu, coeff_of_restitution=self.cor, gravity=self.gravity)
+                        mu=self.mu, coeff_of_restitution=self.cor, gravity=self.gravity, contact_model=self.contact_model)
         # Progress Tracker
         system.iterationChanged.connect(self.sim_progressBar.setValue)
         system.total_iterationsChanged.connect(self.sim_progressBar.setMaximum)
@@ -263,6 +305,13 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         msg.setIcon(QMessageBox.Icon.Information)
         msg.exec()
 
+    def message_created_plot(self):
+        msg = QMessageBox()
+        msg.setWindowTitle("Created Plot")
+        msg.setText("plotting the energy was successful")
+        msg.setIcon(QMessageBox.Icon.Information)
+        msg.exec()
+
 
 # this ensures that the game can only be called
 # here and not through an import
@@ -271,10 +320,3 @@ if __name__ == "__main__":
     window = MainWindow()
     window.show()
     app.exec()
-
-
-
-
-
-
-

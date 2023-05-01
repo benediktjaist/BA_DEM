@@ -182,10 +182,10 @@ class Assembly:
                 # Draw the particles
                 for n_particle in self.particles:
                     # particle position + radius
-                    pygame.draw.circle(win, col('black'), (n_particle.position[0], n_particle.position[1]),
+                    pygame.draw.circle(win, (0,101,189), (n_particle.position[0], n_particle.position[1]), # col('black')
                                        n_particle.radius)
                     # particle orientation (rotation)
-                    pygame.draw.line(win, (139, 0, 0),
+                    pygame.draw.line(win, (162,173,0),
                                      (n_particle.position[0], n_particle.position[1]),
                                      (n_particle.position[0] + n_particle.radius * np.cos(
                                          n_particle.rotation[2]),

@@ -4,7 +4,7 @@ import numpy as np
 
 class Particle:
 
-    def __init__(self, position, velocity, acceleration, force, rotation, rotation_vel, rotation_acc, torque, radius, elstiffnesn,
+    def __init__(self, position, velocity, acceleration, force, rotation, rotation_vel, rotation_acc, torque, radius, k_n, poisson,
                  mass, pred_position, interpenetration_vel, pp_torque=np.array([0, 0, 0]), pb_torque=np.array([0, 0, 0])):
         self.position = position
         self.velocity = velocity
@@ -15,7 +15,8 @@ class Particle:
         self.rotation_acc = rotation_acc
         self.torque = torque
         self.radius = radius
-        self.elstiffnesn = elstiffnesn
+        self.k_n = k_n
+        self.poisson = poisson
         self.mass = mass
         self.pred_position = pred_position
         self.interpenetration_vel = interpenetration_vel
@@ -31,13 +32,19 @@ class Particle:
         self.energy_pot = []
         self.energy_el = []
         self.energy_damp = []
+        self.energy_tan = []
+        self.interpenetrations_pp = None
+        self.interpenetrations_pb = None
+        self.historic_forces = None
         self.id = None
+        self.E = self.k_n * 0.01
 
     def __str__(self):
         return f"Position: {self.position}\nVelocity: {self.velocity}\nAcceleration: {self.acceleration}\n" \
                f"Force: {self.force}\nRotation: {self.rotation}\nRotation Velocity: {self.rotation_vel}\n" \
                f"Rotation Acceleration: {self.rotation_acc}\nTorque: {self.torque}\nRadius: {self.radius}\n" \
-               f"Elastic Stiffness: {self.elstiffnesn}\nMass: {self.mass}\n" \
+               f"Elastic Stiffness: {self.k_n}\nMass: {self.mass}\n" \
+               f"Poisson: {self.poisson}\n" \
                f"Predicted Position: {self.pred_position}\nInterpenetration Velocity: {self.interpenetration_vel}"
 
 
